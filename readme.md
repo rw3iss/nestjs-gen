@@ -1,6 +1,6 @@
 ## Install:
 
-    npm install rw3iss/nestjs-gen
+    npm install nestjs-gen
 
 
 #### Generate a module / package contents / whatever:

@@ -22,7 +22,7 @@
     "prompts": "^2.3.2"
   },
   "publishConfig": {
-    "registry": "https://www.npmjs.com/package"
+    "registry": "https://registry.npmjs.org"
   },
   "bugs": {
     "url": "https://github.com/rw3iss/nestjs-gen/issues"
