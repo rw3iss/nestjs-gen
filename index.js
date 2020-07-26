@@ -1,7 +1,9 @@
+#!/usr/bin/env node
+
 const prog = require('caporal');
-let fs = require('fs');
-let path = require('path');
-let generate = require('./lib/generator');
+const fs = require('fs');
+const path = require('path');
+const generate = require('./lib/generator');
 
 function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -9,7 +11,7 @@ function capitalize(str) {
 
 prog
   .version('1.0.0')
-  .command('gen', 'Generate the model package...')
+
   .argument('<name>', 'Name of the model or module')
 
   .option('--p <prefix>', 'Specify root/prefix dir to generate in')
@@ -47,8 +49,6 @@ prog
   .option('--no-model-dir', 'Don\'t put models in default "models" subdirectory')
 
   .action((args, o, logger) => {
-
-    console.log("RUN", args, o);
 
     // normalize and validate
     if (o.p) { o.prefix = o.p };
