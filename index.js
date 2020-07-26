@@ -14,28 +14,28 @@ prog
 
   .argument('<name>', 'Name of the model or module')
 
-  .option('--p <prefix>', 'Specify root/prefix dir to generate in')
+  .option('-p <prefix>', 'Specify root/prefix dir to generate in')
   .option('--prefix <prefix>', 'Specify root/prefix dir to generate in')
 
-  .option('--a', 'Generate all (module + controller + service + repository + model')
+  .option('-a', 'Generate all (module + controller + service + repository + model')
   .option('--all', 'Generate all (module + controller + service + repository + model')
 
-  .option('--m', 'Generate a module')
+  .option('-m', 'Generate a module')
   .option('--module', 'Generate a module')
 
   .option('-r', 'Generate a repository for the model')
   .option('--repo', 'Generate a repository for the model')
   .option('--repository', 'Generate a repository for the model')
 
-  .option('--md', 'Generate the model files')
+  .option('-d', 'Generate the model files')
   .option('--model', 'Generate the model files')
-  .option('--model-name', 'Specify a custom name for the model class')
-  .option('--model-dir', 'Don\'t put models in default "models" subdirectory')
+  .option('--model-name <name>', 'Specify a custom class name for the model')
+  .option('--model-dir <dir>', 'Don\'t put models in default "models" subdirectory')
 
-  .option('--c', 'Generate a controller for the model')
+  .option('-c', 'Generate a controller for the model')
   .option('--controller', 'Generate a controller for the model')
 
-  .option('--s', 'Generate a service for the model')
+  .option('-s', 'Generate a service for the model')
   .option('--service', 'Generate a service for the model')
 
   // make interface?
@@ -43,8 +43,8 @@ prog
   
   // add authentication guards?
   .option('--auth', 'CRUD actions will add authentication guards, requiring a logged in user')
-  .option('--auth-guard-class', 'The name of the Guard class')
-  .option('--auth-guard-location', 'The location of the Guard class')
+  .option('--auth-guard-class <name>', 'The name of the Guard class')
+  .option('--auth-guard-dir <dir>', 'The location of the Guard class')
 
   .action((args, o, logger) => {
 
@@ -66,7 +66,7 @@ prog
     // set auth guarding params if applicable
     if (o.auth) {
         o.authGuardName = o.authGuardClass ? o.authGuardClass : 'PrincipalGuard';
-        o.authGuardLocation =  o.authGuardLocation ? o.authGuardLocation : 'modules/auth/lib/';
+        o.authGuardDir =  o.authGuardDir ? o.authGuardDir : 'modules/auth/lib/';
     }
 
     // make containing folder
@@ -94,8 +94,10 @@ prog
         if (o.modelDir) {
             outPathModel += '/' + o.modelDir;
         } else {
-            fs.mkdirSync(outPathModel, { recursive: true });
+            o.modelDir = '';
         }
+
+        fs.mkdirSync(outPathModel, { recursive: true });
         let outFile = `${outPathModel}/${o.modelName.toLowerCase()}.model.ts`;
 
         generate('model', o, outFile);

@@ -4,8 +4,8 @@ import { Controller, Request, Param, Body, Get, Post, Put, Delete, ParseUUIDPipe
 <% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= name %>.repository';
 <% } else if (crud) { %>import { Repository } from 'typeorm'; <% } -%>
 <% } %>
-<% if (model || repository || crud) { %>import { <%= modelName %> } from './<% if (!noModelDir) { %>models/<% } %><%= modelNameLower %>.model';<% } %>
-<% if (auth) { %>import { <%= authGuardName %> } from '<%= authGuardLocation %>';<% } %>
+<% if (model || repository || crud) { %>import { <%= modelName %> } from './<%= modelDir %><%= modelNameLower %>.model';<% } %>
+<% if (auth) { %>import { <%= authGuardName %> } from '<%= authGuardDir %>';<% } %>
 
 @Controller('/<%= name %>')
 export class <%=: name | capitalize %>Controller {
