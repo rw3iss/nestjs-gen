@@ -1,32 +1,38 @@
+## What This Is:
+
+This is a package to generate automatic files for NestJS, namely a combination of a module, controller, service, repository, and model files, for any particular model, feature set, etc.
+
 ## Install:
 
     npm install nestjs-gen
 
+
+## How to Use:
 
 #### Generate a module / package contents / whatever:
 
     node ./node_modules/nestjs-gen/index.js gen <name> <options>
 
 
-This will generate a folder <name> within a subdirectory according to options. See below for examples.
+This will generate a folder \<name> within the current directory according to the options. See below for examples.
+
+(Tip: Use --prefix to place files within a prefix directory, from the current folder)
 
 
 ## Examples:
 
-#### Generate Module with all Features (controller, service, repository, model):
+#### Generate a Module with all features (module, controller, service, repository, and model):
 
-    node ./node_modules/nestjs-gen/index.js gen example --all --prefix "src"
+    node ./node_modules/nestjs-gen/index.js gen example --all
 
 This will generate:
 
-    ./modules/example/example.module.js
-    ./modules/example/example.controller.js
-    ./modules/example/example.service.js
-    ./modules/example/example.repository.js
-    ./modules/example/models/example.model.js
+    ./modules/example/example.module.js         (ExampleModule)
+    ./modules/example/example.controller.js     (ExampleController)
+    ./modules/example/example.service.js        (ExampleService)
+    ./modules/example/example.repository.js     (ExampleRepository)
+    ./modules/example/models/example.model.js   (ExampleModel)
     (and corresponding CRUD interface within controller and service)
-
-(Use --prefix to place files within the prefix directory, from the current folder)
 
 #### Generate just Controller, Repository, and Test model (no module)
 
@@ -34,13 +40,12 @@ This will generate:
 
 This will generate:
 
-    ./example/example.controller.js
-    ./example/example.repository.js
-    ./example/models/example.model.js
+    ./example/example.controller.js             (ExampleController)
+    ./example/example.repository.js             (ExampleRepository)
+    ./example/models/example.model.js           (ExampleModel)
     (and corresponding CRUD interface within controller and service)
 
-
-(If you want things in their own module, just specify `--module`)
+(Tip: If you want the files generated in their own module, just specify `--module`)
 
 
 ## Options:
@@ -74,4 +79,6 @@ This will generate:
      --auth-guard-class     The name of the Guard class                                           optional      default: false
      --auth-guard-location  The location of the Guard class                                       optional      default: false
 
-     --no-model-dir         Don't put models in "models" subdirectory                             optional      default: false
+
+## Other Things to Note / Todo:
+The generated files will all reference eachother correctly, but you will still need to add these references to your main AppModule, or wherever you need to use them. In other words: this package doesn't "edit" existing files.
