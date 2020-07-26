@@ -1,9 +1,9 @@
-##Install:
+## Install:
 
     npm install rw3iss/nestjs-gen
 
 
-####Generate a module / package contents / whatever:
+#### Generate a module / package contents / whatever:
 
     node ./node_modules/nestjs-gen/index.js gen <name> <options>
 
@@ -11,7 +11,7 @@
 This will generate a folder <name> within a subdirectory according to options. See below for examples.
 
 
-##Examples:
+## Examples:
 
 #### Generate Module with all Features:
 
@@ -43,7 +43,7 @@ This will generate:
 (If you want things in their own module, just specify `--module`)
 
 
-##Options:
+## Options:
 
      --p <prefix>           Specify root/prefix dir to generate in                                optional
      --prefix <prefix>      Specify root/prefix dir to generate in                                optional
