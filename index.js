@@ -69,7 +69,7 @@ prog
     }
 
     // make containing folder
-    let outPath =  path.resolve((o.prefix ? o.prefix : '') + '/');
+    let outPath =  path.resolve((o.prefix ? o.prefix : './'));
     if (o.module) {
         outPath += `/modules/${o.name}`;
     } else {
