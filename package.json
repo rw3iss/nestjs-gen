@@ -1,0 +1,22 @@
+{
+  "name": "nest-gen",
+  "version": "1.0.0",
+  "description": "NestJS model package generator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "nestjs",
+    "scaffold",
+    "generator"
+  ],
+  "repository": "https://github.com/rw3iss/nestjs-gen",
+  "author": "Ryan Weiss <rw3iss@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "caporal": "^1.4.0",
+    "ejs": "github:tj/ejs",
+    "prompts": "^2.3.2"
+  }
+}

@@ -1,0 +1,19 @@
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+<% if (controller) { %>import { <%=: name | capitalize %>Controller } from './<%= name %>.controller';<% } %>
+<% if (service) { %>import { <%=: name | capitalize %>Service } from './<%= name %>.service';<% } %>
+<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= name %>.repository';
+<% } else if (false && crud) { %>import { Repository } from 'typeorm'; <% } %>
+import { <%= modelName %> } from './<% if (!noModelDir) { %>models/<% } %><%= modelNameLower %>.model';
+
+@Module({
+<% if (model || repository || crud) { %>imports: [TypeOrmModule.forFeature([<%= modelName %>])]<% if (controller || service || repository || crud) { %>,<% } %><% } %>
+    <% if (controller) { %>controllers: [<%=: name | capitalize %>Controller],<% } %>
+    <% if (service || repository || crud) { %>providers: [
+        <% if (service) { %><%=: name | capitalize %>Service<% if (repository) { %>,<% } %><% } %>
+        <% if (repository) { %><%- repositoryName %><% } %>
+    ],
+<% } -%>
+    exports: []
+})
+export class <%=: name | capitalize %>Module {}

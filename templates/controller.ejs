@@ -1,0 +1,98 @@
+import { Controller, Request, Param, Body, Get, Post, Put, Delete, ParseUUIDPipe<% if (auth) { %>, UseGuards<% } %> } from "@nestjs/common";
+<% if (service) { %>import { <%=: name | capitalize %>Service } from './<%= name %>.service';
+<% } else { -%>
+<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= name %>.repository';
+<% } else if (crud) { %>import { Repository } from 'typeorm'; <% } -%>
+<% } %>
+<% if (model || repository || crud) { %>import { <%= modelName %> } from './<% if (!noModelDir) { %>models/<% } %><%= modelNameLower %>.model';<% } %>
+<% if (auth) { %>import { <%= authGuardName %> } from '<%= authGuardLocation %>';<% } %>
+
+@Controller('/<%= name %>')
+export class <%=: name | capitalize %>Controller {
+
+    public constructor(<% if (service) { %>private readonly <%= name %>Service: <%=: name | capitalize %>Service<% } -%>
+<% if (!service && (repository || crud)) { %>private readonly <%= name %>Repository: <%- repositoryName %><% } %>) {
+    }
+
+<% if (crud) { -%>
+    @Get('/:id')
+    public async getById(id: string): Promise<<%= modelName %>> {
+        <% if (service) { %>
+        return await this.<%= name %>Service.getById(id);
+        <% } else if (repository || crud) { %>
+        return await this.<%= name %>Repository.findOneOrFail({ id });
+        <% } %>
+    }
+
+    @Post()
+    <% if (auth) { %>@UseGuards(<%= authGuardName %>)
+    <% } -%>
+public create(@Request() req, @Body() body: any): Promise<<%= modelName %>> {
+        console.log('create', req.principal, body)
+        <% if (service) { %>
+        let <%= modelNameLower %>: <%= modelName %> = new <%= modelName %>();
+        Object.assign(<%= modelNameLower %>, body);
+        return this.<%= name %>Service.create(req, <%= modelNameLower %>);
+        <% } else if (repository || crud) { %>
+        let <%= modelNameLower %>: <%= modelName %> = new <%= modelName %>();
+        Object.assign(<%= modelNameLower %>, body);
+        return this.<%= name %>Repository.save(<%= modelNameLower %>);
+    <% } %>
+    }
+
+    @Put('/:id')
+    <% if (auth) { %>@UseGuards(<%= authGuardName %>)
+    <% } -%>
+public async update(@Request() req, @Param('id', ParseUUIDPipe) id: string, @Body() body: any): Promise<<%= modelName %>> {
+        console.log("update", body);
+        <% if (service) { %>
+        let <%= modelNameLower %>: <%= modelName %> = await this.<%= name %>Service.getById(id);
+        if (!<%= modelNameLower %>) {
+            throw "Object <%= modelNameLower %> does not exist";
+        } 
+        Object.assign(<%= modelNameLower %>, body);
+        return this.<%= name %>Service.update(req, <%= modelNameLower %>);
+        <% } else if (repository || crud) { %>
+        let <%= modelNameLower %>: <%=: name | capitalize %> = await this.<%= name %>Repository.findOneOrFail({ id });
+        if (!<%= modelNameLower %>) {
+            throw "Object <%= modelNameLower %> does not exist";
+        } 
+
+        Object.assign(<%= modelNameLower %>, body);
+        return this.<%= name %>Repository.save(<%= modelNameLower %>);
+    <% } %>
+    }
+
+    @Delete('/:id')
+    <% if (auth) { %>@UseGuards(<%= authGuardName %>)
+    <% } -%>
+public async remove(@Request() req, @Param('id', ParseUUIDPipe) id: string, @Body() body: any): Promise<<%= modelName %>> {
+        console.log("remove", body);
+        <% if (service) { %>
+        return this.<%= name %>Service.remove(req, id);
+        <% } else if (repository || crud) { %>
+        let <%= modelNameLower %> = await this.<%= name %>Repository.findOneOrFail({ id });
+        if (!<%= modelNameLower %>) {
+            throw "Object <%= modelNameLower %> does not exist";
+        }
+
+        await this.<%= name %>Repository.delete(id);
+        return <%= name%>;
+    <% } %>
+    }
+
+    @Get()
+    <% if (auth) { %>@UseGuards(<%= authGuardName %>)
+    <% } -%>
+public async search(@Request() req): Promise<Array<<%= modelName %>>> {
+        <% if (service) { %>
+        return await this.<%= name %>Service.search(req);
+        <% } else if (repository || crud) { %>
+        return await this.<%= name %>Repository.find({
+            <% if (auth) { %>where: { user: req.principal }<% } %>
+        });
+    <% } %>
+    }
+<% } -%>
+
+}
