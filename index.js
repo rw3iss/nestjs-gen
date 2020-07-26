@@ -17,34 +17,34 @@ prog
   .option('-p <prefix>', 'Specify root/prefix dir to generate in')
   .option('--prefix <prefix>', 'Specify root/prefix dir to generate in')
 
-  .option('-a', 'Generate all (module + controller + service + repository + model')
-  .option('--all', 'Generate all (module + controller + service + repository + model')
+  .option('-a', 'Generate all (Module + Controller + Service + Repository + Model')
+  .option('--all', 'Generate all (Module + Controller + Service + Repository + Model')
 
-  .option('-m', 'Generate a module')
-  .option('--module', 'Generate a module')
+  .option('-m', 'Generate a Module')
+  .option('--module', 'Generate a Module')
 
-  .option('-r', 'Generate a repository for the model')
-  .option('--repo', 'Generate a repository for the model')
-  .option('--repository', 'Generate a repository for the model')
+  .option('-r', 'Generate a Repository for the model')
+  .option('--repo', 'Generate a Repository for the model')
+  .option('--repository', 'Generate a Repository for the model')
 
   .option('-d', 'Generate the model files')
-  .option('--model', 'Generate the model files')
+  .option('--model', 'Generate the model file')
   .option('--model-name <name>', 'Specify a custom class name for the model')
-  .option('--model-dir <dir>', 'Don\'t put models in default "models" subdirectory')
+  .option('--model-dir <dir>', 'Specify a subdirectory to put the model in (ie. \'models\')')
 
-  .option('-c', 'Generate a controller for the model')
-  .option('--controller', 'Generate a controller for the model')
+  .option('-c', 'Generate a Controller for the model')
+  .option('--controller', 'Generate a Controller for the model')
 
-  .option('-s', 'Generate a service for the model')
-  .option('--service', 'Generate a service for the model')
+  .option('-s', 'Generate a Service for the model')
+  .option('--service', 'Generate a Service for the model')
 
   // make interface?
-  .option('--crud', 'Generates CRUD actions within the controller and service')
+  .option('--crud', 'Generates CRUD actions within the Controller and Service')
   
   // add authentication guards?
   .option('--auth', 'CRUD actions will add authentication guards, requiring a logged in user')
-  .option('--auth-guard-class <name>', 'The name of the Guard class')
-  .option('--auth-guard-dir <dir>', 'The location of the Guard class')
+  .option('--auth-guard-class <name>', 'Name of a custom @(Guard<name>) class to use')
+  .option('--auth-guard-dir <dir>', 'The location of the custom @Guard class file')
 
   .action((args, o, logger) => {
 
