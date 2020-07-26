@@ -4,7 +4,7 @@ A command line tool to automatically generate some or all feature set files for 
 * \<name>.module.ts
 * \<name>.controller.ts
 * \<name>.service.ts
-* \<name>.module.ts
+* \<name>.repository.ts
 * \<name>.model.ts
 
 The generated class files will automatically reference each other through imports and injections. 
@@ -114,6 +114,7 @@ Your custom auth guard class name and location can be defined with --auth-guard-
      --auth-guard-dir <dir>         The location of the custom @Guard class file                                 optional
      
      --template-dir <dir>           Specify a custom location of template files to use                           optional
+     --no-subdir                    Don't put generated files in <name> subdirectory (if not using a module)     optional      default: false
 
 
 ## Other Things to Note:

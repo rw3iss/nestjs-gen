@@ -47,6 +47,7 @@ prog
   .option('--auth-guard-dir <dir>', 'The location of the custom @Guard class file')
 
   .option('--template-dir <dir>', 'The location of the template files to use')
+  .option('--no-subdir', 'Don\'t put generated files in <name> subdirectory (if not using a module)')
 
   .action((args, o, logger) => {
 
@@ -76,7 +77,7 @@ prog
     if (o.module) {
         outPath += `/modules/${o.name}`;
     } else {
-        outPath += `/${o.name}`;
+        outPath += o.noSubdir ? '' : `/${o.name}`;
     }
 
     fs.mkdirSync(outPath, { recursive: true });
