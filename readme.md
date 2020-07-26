@@ -13,7 +13,7 @@ This will generate a folder <name> within a subdirectory according to options. S
 
 ## Examples:
 
-#### Generate Module with all Features:
+#### Generate Module with all Features (controller, service, repository, model):
 
     node ./node_modules/nestjs-gen/index.js gen example --all --prefix "src"
 
@@ -30,7 +30,7 @@ This will generate:
 
 #### Generate just Controller, Repository, and Test model (no module)
 
-    node ./node_modules/nestjs-gen/index.js gen test --crud
+    node ./node_modules/nestjs-gen/index.js gen example --crud
 
 This will generate:
 
@@ -53,8 +53,8 @@ This will generate:
      
      --m                    Generate a module                                                     optional      default: false
      --module               Generate a module                                                     optional      default: false
-     
-     --r                     Generate a repository for the model                                   optional      default: false
+      
+     --r                    Generate a repository for the model                                   optional      default: false
      --repo                 Generate a repository for the model                                   optional      default: false
      --repository           Generate a repository for the model                                   optional      default: false
      
@@ -71,5 +71,7 @@ This will generate:
      --crud                 Generates CRUD actions within the controller and service              optional      default: false
      
      --auth                 CRUD actions will require a logged in user                            optional      default: false
-     
+     --auth-guard-class     The name of the Guard class                                           optional      default: false
+     --auth-guard-location  The location of the Guard class                                       optional      default: false
+
      --no-model-dir         Don't put models in "models" subdirectory                             optional      default: false

@@ -37,10 +37,14 @@ prog
 
   // make interface?
   .option('--crud', 'Generates CRUD actions within the controller and service')
-  .option('--auth', 'CRUD actions will require a logged in user')
+  
+  // add authentication guards?
+  .option('--auth', 'CRUD actions will add authentication guards, requiring a logged in user')
+  .option('--auth-guard-class', 'The name of the Guard class')
+  .option('--auth-guard-location', 'The location of the Guard class')
 
   // extended options
-  .option('--no-model-dir', 'Don\'t put models in "models" subdirectory')
+  .option('--no-model-dir', 'Don\'t put models in default "models" subdirectory')
 
   .action((args, o, logger) => {
 
@@ -62,10 +66,9 @@ prog
     o.name = args.name;
 
     // set auth guarding params if applicable
-    // TODO: move to config
     if (o.auth) {
-        o.authGuardName = 'PrincipalGuard';
-        o.authGuardLocation = 'modules/auth/lib/PrincipalGuard';
+        o.authGuardName = o.authGuardClass ? o.authGuardClass : 'PrincipalGuard';
+        o.authGuardLocation =  o.authGuardLocation ? o.authGuardLocation : 'modules/auth/lib/';
     }
 
     // make containing folder
@@ -123,7 +126,7 @@ prog
         generate('controller', o, outFile);
     }
 
-    // SERVICE ?s
+    // SERVICE ?
     if (o.service) {
         let outFile = `${outPath}/${o.name}.service.ts`;
         generate('service', o, outFile);

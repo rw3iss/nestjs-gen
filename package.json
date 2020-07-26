@@ -4,19 +4,32 @@
   "description": "NestJS model package generator",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
     "nestjs",
     "scaffold",
     "generator"
   ],
-  "repository": "https://github.com/rw3iss/nestjs-gen",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:rw3iss/nestjs-gen.git"
+  },
   "author": "Ryan Weiss <rw3iss@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "caporal": "^1.4.0",
     "ejs": "github:tj/ejs",
     "prompts": "^2.3.2"
-  }
+  },
+  "publishConfig": {
+    "registry": "https://www.npmjs.com/package"
+  },
+  "bugs": {
+    "url": "https://github.com/rw3iss/nestjs-gen/issues"
+  },
+  "homepage": "https://github.com/rw3iss/nestjs-gen#readme",
+  "directories": {
+    "lib": "lib"
+  },
+  "devDependencies": {}
 }
