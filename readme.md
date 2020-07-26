@@ -88,10 +88,10 @@ Your custom auth guard class name and location can be defined with --auth-guard-
 
      -a                             Generate all (Module + Controller + Service + Repository + Model             optional      default: false
      --all                          Generate all (Module + Controller + Service + Repository + Model             optional      default: false
-     
+
      -m                             Generate a Module                                                            optional      default: false
      --module                       Generate a Module                                                            optional      default: false
-     
+
      -r                             Generate a Repository for the model                                          optional      default: false
      --repo                         Generate a Repository for the model                                          optional      default: false
      --repository                   Generate a Repository for the model                                          optional      default: false
@@ -108,13 +108,18 @@ Your custom auth guard class name and location can be defined with --auth-guard-
      --service                      Generate a Service for the model                                             optional      default: false
      
      --crud                         Generates CRUD actions within the Controller and Service                     optional      default: false
-    
+     
      --auth                         CRUD actions will add authentication guards, requiring a logged in user      optional      default: false
      --auth-guard-class <name>      Name of a custom @(Guard<name>) class to use                                 optional
      --auth-guard-dir <dir>         The location of the custom @Guard class file                                 optional
      
+     --template-dir <dir>           Specify a custom location of template files to use                           optional
 
 
-## Other Things to Note / Todo:
-The generated files will all reference eachother correctly, but you will still need to add these references to your main AppModule, or wherever you need to use them. 
+## Other Things to Note:
+*The generated files will all reference eachother correctly, but you will still need to add these references to your main AppModule, or wherever you need to use them.
+ 
 In other words: this package doesn't edit existing files.
+
+## Editing Templates
+To edit the template files, copy all of them from this repository's /templates directory (or ./node_modules/nestjs-gen/templates locally), put them in a custom folder in the root of your project, edit as needed, and specify their location with --template-dir <folder>.

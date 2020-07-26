@@ -46,6 +46,8 @@ prog
   .option('--auth-guard-class <name>', 'Name of a custom @(Guard<name>) class to use')
   .option('--auth-guard-dir <dir>', 'The location of the custom @Guard class file')
 
+  .option('--template-dir <dir>', 'The location of the template files to use')
+
   .action((args, o, logger) => {
 
     // normalize and validate
