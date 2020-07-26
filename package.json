@@ -5,6 +5,9 @@
   "main": "index.js",
   "scripts": {
   },
+  "bin": {
+    "ngen": "./index.js"
+  },
   "keywords": [
     "nestjs",
     "scaffold",

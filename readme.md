@@ -9,7 +9,7 @@ This is a package to generate automatic files for NestJS, namely a combination o
 
 ## How to Use:
 
-#### Generate a module / package contents / whatever:
+#### Generate a Module / Controller / Service / Repository / Model (or all):
 
     node ./node_modules/nestjs-gen/index.js gen <name> <options>
 
@@ -17,6 +17,7 @@ This is a package to generate automatic files for NestJS, namely a combination o
 This will generate a folder \<name> within the current directory according to the options. See below for examples.
 
 (Tip: Use --prefix to place files within a prefix directory, from the current folder)
+(Tip: Use --crud to automatically generate CRUD interfaces within the Controller and Service classes)
 
 
 ## Examples:
@@ -34,7 +35,7 @@ This will generate:
     ./modules/example/models/example.model.js   (ExampleModel)
     (and corresponding CRUD interface within controller and service)
 
-#### Generate just Controller, Repository, and Test model (no module)
+#### Generate just a Controller, Repository, and Test model, not in a module
 
     node ./node_modules/nestjs-gen/index.js gen example --crud
 
@@ -47,8 +48,22 @@ This will generate:
 
 (Tip: If you want the files generated in their own module, just specify `--module`)
 
+#### Generate each specific thing you want
 
-## Options:
+    node ./node_modules/nestjs-gen/index.js gen example --module --controller --service --repository --model --crud --prefix "src"
+
+Or shorter:
+
+    node ./node_modules/nestjs-gen/index.js gen example --m --c --s --r --md --crud --prefix "src"
+
+This will generate all the respective class files within "src/modules/example/".
+
+## To Note:
+* If you specify --repository or --crud, a model will automatically be generated.
+* If you specify --auth, `@Guard(<auth-guard-class>)` decorators will be added to the crud interfaces. Your custom auth guard class name and location can be defined with --auth-guard-class and --auth-guard-location.
+
+
+## All Options:
 
      --p <prefix>           Specify root/prefix dir to generate in                                optional
      --prefix <prefix>      Specify root/prefix dir to generate in                                optional
