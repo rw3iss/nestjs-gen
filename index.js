@@ -30,6 +30,7 @@ prog
   .option('--md', 'Generate the model files')
   .option('--model', 'Generate the model files')
   .option('--model-name', 'Specify the exact name for the model class')
+  .option('--no-model-dir', 'Don\'t put models in default "models" subdirectory')
 
   .option('--c', 'Generate a controller for the model')
   .option('--controller', 'Generate a controller for the model')
@@ -44,9 +45,6 @@ prog
   .option('--auth', 'CRUD actions will add authentication guards, requiring a logged in user')
   .option('--auth-guard-class', 'The name of the Guard class')
   .option('--auth-guard-location', 'The location of the Guard class')
-
-  // extended options
-  .option('--no-model-dir', 'Don\'t put models in default "models" subdirectory')
 
   .action((args, o, logger) => {
 
