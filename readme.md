@@ -1,13 +1,15 @@
 ## What This Is:
 
 A command line tool to automatically generate some or all feature set files for NestJS:
--module
--controller
--service
--repository
--model
+* \<name>.module.ts
+* \<name>.controller.ts
+* \<name>.service.ts
+* \<name>.module.ts
+* \<name>.model.ts
 
 The generated class files will automatically reference each other through imports and injections. 
+
+For now it will only generate TypeScript files (normal JS todo/soon).
 
 ## Install:
 

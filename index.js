@@ -29,8 +29,8 @@ prog
 
   .option('--md', 'Generate the model files')
   .option('--model', 'Generate the model files')
-  .option('--model-name', 'Specify the exact name for the model class')
-  .option('--no-model-dir', 'Don\'t put models in default "models" subdirectory')
+  .option('--model-name', 'Specify a custom name for the model class')
+  .option('--model-dir', 'Don\'t put models in default "models" subdirectory')
 
   .option('--c', 'Generate a controller for the model')
   .option('--controller', 'Generate a controller for the model')
@@ -90,9 +90,9 @@ prog
 
         o.modelNameLower = o.modelName.toLowerCase();
 
-        let outPathModel = outPath + '/models';
-        if (o.noModelDir) {
-            outPathModel = outPath;
+        let outPathModel = outPath;
+        if (o.modelDir) {
+            outPathModel += '/' + o.modelDir;
         } else {
             fs.mkdirSync(outPathModel, { recursive: true });
         }
