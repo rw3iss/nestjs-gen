@@ -75,6 +75,7 @@ Or shorter:
 This will generate all the respective class files within "./modules/example/".
 
 ## To Note:
+* Generated models will strip any trailing 's' in the given name argument, if one exists, unless you set the model class name explicitly with --model-name.
 * If you specify --repository or --crud, a model will automatically be generated.
 * You can specify --auth and `@Guard(<auth-guard-class>)` decorators will be added to the CRUD interfaces. 
 Your custom auth guard class name and location can be defined with --auth-guard-class and --auth-guard-location.

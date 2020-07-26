@@ -93,6 +93,9 @@ prog
         let outPathModel = outPath;
         if (o.modelDir) {
             outPathModel += '/' + o.modelDir;
+            if (o.modelName.charAt(o.modelName.length-1) !== '/') {
+                o.modelDir += '/';
+            }
         } else {
             o.modelDir = '';
         }
