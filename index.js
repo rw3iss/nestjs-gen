@@ -9,6 +9,16 @@ function capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+function _getFileName(className, type, casing) {
+    if (casing) {
+        if (casing == 'pascal') {
+            return `${capitalize(className)}${capitalize(type)}`;
+        }
+    }
+
+    return `${className.toLowerCase()}.${type}`;
+}
+
 prog
 .version('1.0.0')
 
@@ -49,6 +59,8 @@ prog
 .option('--template-dir <dir>', 'The location of the template files to use')
 .option('--no-subdir', 'Don\'t put generated files in <name> subdirectory (if not using a module)')
 
+.option('--casing <pascal>', 'default = "example.controller.ts", pascal = "ExampleController.ts"')
+
 .action((args, o, logger) => {
 
     // normalize and validate
@@ -81,6 +93,9 @@ prog
     }
 
     fs.mkdirSync(outPath, { recursive: true });
+
+    // container for which files will be generated
+    let stagedFiles = [];
     
     // MODEL ?
     if (o.model || o.repository || o.crud) {
@@ -104,39 +119,51 @@ prog
         }
 
         fs.mkdirSync(outPathModel, { recursive: true });
-        let outFile = `${outPathModel}/${o.modelName.toLowerCase()}.model.ts`;
 
-        generate('model', o, outFile);
+        o.modelFileName = _getFileName(o.modelName, 'model', o.casing);
+        let outFile = `${outPathModel}/${o.modelFileName}.ts`;
+
+        stagedFiles.push({ type: 'model', outFile });
     }
 
     // MODULE ?
     if (o.module) {
-        let outFile = `${outPath}/${o.name}.module.ts`;
-        generate('module', o, outFile);
+        o.moduleFileName = _getFileName(o.name, 'module', o.casing);
+        let outFile = `${outPath}/${o.moduleFileName}.ts`;
+        stagedFiles.push({ type: 'module', outFile });
     }
 
     // REPOSITORY ?
     if (o.repository) {
         o.repositoryName = capitalize(o.name) + 'Repository';
-        let outFile = `${outPath}/${o.name}.repository.ts`;
-        generate('repository', o, outFile);
+        o.repositoryFileName = _getFileName(o.name, 'repository', o.casing);
+        let outFile = `${outPath}/${o.repositoryFileName}.ts`;
+        stagedFiles.push({ type: 'repository', outFile });
     } else if (o.crud) {
+        // use a generic repository
         o.repositoryName = `Repository\<${o.modelName}\>`;
-        let outFile = `${outPath}/${o.name}.repository.ts`;
-        generate('repository', o, outFile);
+        o.repositoryFileName = _getFileName(o.name, 'repository', o.casing);
+        let outFile = `${outPath}/${o.repositoryFileName}.ts`;
+        stagedFiles.push({ type: 'repository', outFile });
     }
 
     // CONTROLLER ?
     if (o.controller || o.crud) {
-        let outFile = `${outPath}/${o.name}.controller.ts`;
-        generate('controller', o, outFile);
+        o.controllerFileName = _getFileName(o.name, 'controller', o.casing);
+        let outFile = `${outPath}/${o.controllerFileName}.ts`;
+        stagedFiles.push({ type: 'controller', outFile });
     }
 
     // SERVICE ?
     if (o.service) {
-        let outFile = `${outPath}/${o.name}.service.ts`;
-        generate('service', o, outFile);
+        o.serviceFileName = _getFileName(o.name, 'service', o.casing);
+        let outFile = `${outPath}/${o.serviceFileName}.ts`;
+        stagedFiles.push({ type: 'service', outFile });
     }
+
+    stagedFiles.forEach(fd => {
+        generate(fd.type, o, fd.outFile);
+    });
 
 });
 

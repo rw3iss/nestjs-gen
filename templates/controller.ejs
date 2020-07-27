@@ -1,10 +1,10 @@
 import { Controller, Request, Param, Body, Get, Post, Put, Delete, ParseUUIDPipe<% if (auth) { %>, UseGuards<% } %> } from "@nestjs/common";
-<% if (service) { %>import { <%=: name | capitalize %>Service } from './<%= name %>.service';
+<% if (service) { %>import { <%=: name | capitalize %>Service } from './<%= serviceFileName %>';
 <% } else { -%>
-<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= name %>.repository';
+<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= controllerFileName %>';
 <% } else if (crud) { %>import { Repository } from 'typeorm'; <% } -%>
 <% } %>
-<% if (model || repository || crud) { %>import { <%= modelName %> } from './<%= modelDir %><%= modelNameLower %>.model';<% } %>
+<% if (model || repository || crud) { %>import { <%= modelName %> } from './<%= modelFileName %>';<% } %>
 <% if (auth) { %>import { <%= authGuardName %> } from '<%= authGuardDir %>';<% } %>
 
 @Controller('/<%= name %>')

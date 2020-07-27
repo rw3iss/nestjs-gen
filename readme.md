@@ -9,9 +9,7 @@ A command line tool to automatically generate some or all feature set files for 
 
 The generated class files will automatically reference each other through imports and injections. 
 
-For now it will only generate TypeScript files (no plain JS), but you can edit the template files if you want to strip the TypeScript stuff.
-
-Template/schematic files can be edited (see below).
+(You can generate pascal-cased filenames with `--casing pascal`, ie. "ExampleModule.ts")
 
 ## Install:
 
@@ -50,8 +48,8 @@ This will generate:
     ./modules/example/example.controller.js     (ExampleController)
     ./modules/example/example.service.js        (ExampleService)
     ./modules/example/example.repository.js     (ExampleRepository)
-    ./modules/example/example.model.js          (ExampleModel)
-    (and corresponding CRUD interface within controller and service)
+    ./modules/example/example.model.js          (Example)
+    (and corresponding CRUD interface within the controller and service)
 
 #### Generate just a Controller, Repository, and Example model (no module)
 
@@ -61,10 +59,10 @@ This will generate:
 
     ./example/example.controller.js             (ExampleController)
     ./example/example.repository.js             (ExampleRepository)
-    ./example/example.model.js                  (ExampleModel)
-    (and corresponding CRUD interface within controller and service)
+    ./example/example.model.js                  (Example)
+    (and corresponding CRUD interface within the controller and service)
 
-(Tip: If you want the files generated in their own module, just specify `--module`)
+(Tip: If you want the files generated in their own module, specify `--module`)
 
 #### Generate each specific thing you want
 
@@ -74,14 +72,15 @@ Or shorter:
 
     ngen example -m -c -s -r -d --crud
 
-This will generate all the respective class files within "./modules/example/".
+This will generate all the respective class files within "./modules/example/", with CRUD interfaces.
 
 ## Things to Note:
 * Generated model class names will strip any trailing 's' in the given name argument, if one exists, unless you set the model class name explicitly with `--model-name <name>`.
 * If you specify `--repository` or `--crud`, a model will automatically be generated.
-* You can specify `--auth` and `@Guard(<auth-guard-class>)` decorators will be added to the CRUD interfaces. 
+* You can specify `--auth`, a `@Guard(<auth-guard-class>)` decorator will be added to the CRUD interfaces. 
 Your custom auth guard class name and location can be defined with `--auth-guard-class <class-name>` and `--auth-guard-location <dir>`.
 * The generated files will all have their imports and injected dependencies referenced correctly relative to each other, but you will still need to add these references to your main AppModule, or wherever you need to use them. In other words: this package doesn't edit existing files.
+* For now it will only generate TypeScript files (no plain JS), but you can customize the template files if you want to strip the TypeScript stuff (see below).
 
 ## All Options:
 
@@ -93,7 +92,6 @@ Your custom auth guard class name and location can be defined with `--auth-guard
 
      -m                             Generate a Module                                                            optional      default: false
      --module                       Generate a Module                                                            optional      default: false
-
      -r                             Generate a Repository for the model                                          optional      default: false
      --repo                         Generate a Repository for the model                                          optional      default: false
      --repository                   Generate a Repository for the model                                          optional      default: false
@@ -117,6 +115,8 @@ Your custom auth guard class name and location can be defined with `--auth-guard
      
      --template-dir <dir>           Specify a custom location of template files to use                           optional
      --no-subdir                    Don't put generated files in <name> subdirectory (if not using a module)     optional      default: false
+     
+     --casing <pascal>              Use pascal-casing for filenames, ie. "ExampleController.ts"                  optional      default: false
 
 
 ## Customizing Templates
