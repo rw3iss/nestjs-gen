@@ -5,51 +5,6 @@ const fs = require('fs');
 const path = require('path');
 const generate = require('./lib/generator');
 
-function capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function _getFileName(className, type, casing) {
-    if (casing) {
-        if (casing == 'pascal') {
-            return `${capitalize(className)}${capitalize(type)}`;
-        }
-    }
-
-    return `${className.toLowerCase()}.${type}`;
-}
-
-function _ensureTrailingSlash(str) {
-    return str.charAt(str.length-1) !== '/' ? (str + '/') : str;
-}
-
-function _findConfig() {
-    let ngenConfig;
-
-    function _read(configFile) {
-        let ngenConfig;
-        if (fs.existsSync(configFile)) {
-            let config = require(configFile);
-            if (config['ngen-config']) {
-                ngenConfig = config['ngen-config']
-            }
-        }
-        return ngenConfig;
-    }
-
-    // look in tsconfig.app.json
-    let configFile = path.resolve("./tsconfig.app.json");
-    ngenConfig = _read(configFile);
-
-    // look in tsconfig.json
-    if (!ngenConfig) {
-        configFile = path.resolve("./tsconfig.json");
-        ngenConfig = _read(configFile);
-    }
-
-    return ngenConfig;
-}
-
 prog
 .version('1.0.0')
 
@@ -65,7 +20,7 @@ prog
 .option('--repo', 'Generate a Repository for the model')
 .option('--repository', 'Generate a Repository for the model')
 
-.option('-d', 'Generate the model files')
+.option('-d', 'Generate the model file')
 .option('--model', 'Generate the model file')
 .option('--model-class <name>', 'Specify a custom class name for the model')
 .option('--model-dir <dir>', 'Specify a subdirectory to put the model in (ie. \'models\')')
@@ -176,7 +131,7 @@ prog
     // MODEL ?
     if (o.model || o.repository || o.crud) {
         if (!o.modelClass) {
-            o.modelClass = capitalize(o.name);
+            o.modelClass = _capitalize(o.name);
             if (o.modelClass.charAt(o.modelClass.length-1) === 's') {
                 o.modelClass = o.modelClass.substr(0, o.modelClass.length-1);
             }
@@ -196,7 +151,6 @@ prog
 
         o.modelFileName = _getFileName(o.modelClass, 'model', o.casing);
         let outFile = `${outPathModel}/${o.modelFileName}.ts`;
-
         stagedFiles.push({ type: 'model', outFile });
     }
 
@@ -209,7 +163,7 @@ prog
 
     // REPOSITORY ?
     if (o.repository) {
-        o.repositoryName = capitalize(o.name) + 'Repository';
+        o.repositoryName = _capitalize(o.name) + 'Repository';
         o.repositoryFileName = _getFileName(o.name, 'repository', o.casing);
         let outFile = `${outPath}/${o.repositoryFileName}.ts`;
         stagedFiles.push({ type: 'repository', outFile });
@@ -242,3 +196,46 @@ prog
 });
 
 prog.parse(process.argv);
+
+
+// utils
+
+function _capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+function _getFileName(className, type, casing) {
+    let _default = `${className.toLowerCase()}.${type}`;
+    return casing ? (casing === 'pascal' ? `${_capitalize(className)}${_capitalize(type)}` : _default) : _default;
+}
+
+function _ensureTrailingSlash(str) {
+    return str.charAt(str.length-1) !== '/' ? (str + '/') : str;
+}
+
+function _findConfig() {
+    let ngenConfig;
+
+    function _read(configFile) {
+        let ngenConfig;
+        if (fs.existsSync(configFile)) {
+            let config = require(configFile);
+            if (config['ngen-config']) {
+                ngenConfig = config['ngen-config']
+            }
+        }
+        return ngenConfig;
+    }
+
+    // look in tsconfig.app.json
+    let configFile = path.resolve("./tsconfig.app.json");
+    ngenConfig = _read(configFile);
+
+    // look in tsconfig.json
+    if (!ngenConfig) {
+        configFile = path.resolve("./tsconfig.json");
+        ngenConfig = _read(configFile);
+    }
+
+    return ngenConfig;
+}

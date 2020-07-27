@@ -77,7 +77,7 @@ Or shorter:
 This will generate all the respective class files within "./modules/example/", with CRUD interfaces.
 
 ## Things to Note:
-* Generated model class names will strip any trailing 's' in the given name argument, if one exists, unless you set the model class name explicitly with `--model-name <name>`.
+* Generated model class/file names will strip any trailing 's' in the given name, if one exists, unless you set the model class name explicitly with `--model-class <name>`.
 * If you specify `--repository` or `--crud`, a model will automatically be generated.
 * You can specify `--auth`, and a `@Guard(<auth-guard-class>)` decorator will be added to the CRUD interfaces. 
 Your custom auth guard class name and location can be defined with `--auth-guard-class <class-name>` and `--auth-guard-location <dir>` (or put in tsconfig.json).
@@ -116,7 +116,7 @@ Note: If using a configuration file, these command line options will always over
      --repo                          Generate a Repository for the model                                                optional      default: false
      --repository                    Generate a Repository for the model                                                optional      default: false
      
-     -d                              Generate the model files                                                           optional      default: false
+     -d                              Generate the model file                                                            optional      default: false
      --model                         Generate the model file                                                            optional      default: false
      --model-class <name>            Specify a custom class name for the model                                          optional
      --model-dir <dir>               Specify a subdirectory to put the model in (ie. 'models')                          optional
