@@ -19,13 +19,36 @@ function _getFileName(className, type, casing) {
     return `${className.toLowerCase()}.${type}`;
 }
 
+function _findConfig() {
+    let ngenConfig;
+
+    // look in tsconfig.app.json
+    let configFile = path.resolve("./tsconfig.app.json");
+    if (fs.existsSync(configFile)) {
+        let config = require(configFile);
+        if (config['ngen-config']) {
+            ngenConfig = config['ngen-config']
+        }
+    } 
+    
+    // look in tsconfig.json
+    if (!ngenConfig) {
+        configFile = path.resolve("./tsconfig.json");
+        if (fs.existsSync(configFile)) {
+            let config = require(configFile);
+            if (config['ngen-config']) {
+                ngenConfig = config['ngen-config']
+            }
+        }
+    }
+
+    return ngenConfig;
+}
+
 prog
 .version('1.0.0')
 
 .argument('<name>', 'Name of the model or module')
-
-.option('-p <prefix>', 'Specify root/prefix dir to generate in')
-.option('--prefix <prefix>', 'Specify root/prefix dir to generate in')
 
 .option('-a', 'Generate all (Module + Controller + Service + Repository + Model')
 .option('--all', 'Generate all (Module + Controller + Service + Repository + Model')
@@ -51,17 +74,46 @@ prog
 // make interface?
 .option('--crud', 'Generates CRUD actions within the Controller and Service')
 
+// add prefix/subdir to generate in
+.option('-p <prefix>', 'Specify root/prefix dir to generate in')
+.option('--prefix <prefix>', 'Specify root/prefix dir to generate in')
+
 // add authentication guards?
 .option('--auth', 'CRUD actions will add authentication guards, requiring a logged in user')
 .option('--auth-guard-class <name>', 'Name of a custom @(Guard<name>) class to use')
 .option('--auth-guard-dir <dir>', 'The location of the custom @Guard class file')
 
 .option('--template-dir <dir>', 'The location of the template files to use')
-.option('--no-subdir', 'Don\'t put generated files in <name> subdirectory (if not using a module)')
+.option('--no-subdir', 'Don\'t put generated files in <name> subdirectory (only if not using a module)')
 
 .option('--casing <pascal>', 'default = "example.controller.ts", pascal = "ExampleController.ts"')
 
 .action((args, o, logger) => {
+
+    // first see if there is a configuration file available, and start with that
+    let config = _findConfig();
+    if (config) {
+        if (config["prefix"] && !o.prefix) 
+            o.prefix = config["prefix"] ;
+
+        if (config["model-dir"] && !o.modelDir) 
+            o.modelDir = config["model-dir"] ;
+
+        if (config["template-dir"] && !o.templateDir) 
+            o.templateDir = config["template-dir"] ;
+
+        if (config["no-subdir"] && !o.noSubdir) 
+            o.noSubdir = config["no-subdir"] ;
+
+        if (config["casing"] && !o.casing) 
+            o.casing = config["casing"] ;
+
+        if (config["auth-guard-class"] && !o.authGuardClass) 
+        o.authGuardClass = config["auth-guard-class"] ;
+
+        if (config["auth-guard-dir"] && !o.authGuardDir) 
+            o.authGuardDir = config["auth-guard-dir"] ;
+    }
 
     // normalize and validate
     if (o.p) { o.prefix = o.p };
@@ -81,7 +133,7 @@ prog
     // set auth guarding params if applicable
     if (o.auth) {
         o.authGuardName = o.authGuardClass ? o.authGuardClass : 'PrincipalGuard';
-        o.authGuardDir =  o.authGuardDir ? o.authGuardDir : 'modules/auth/lib/';
+        o.authGuardDir =  o.authGuardDir ? (o.authGuardDir+'/') : 'modules/auth/lib/';
     }
 
     // make containing folder

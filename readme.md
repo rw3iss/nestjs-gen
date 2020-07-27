@@ -9,7 +9,7 @@ A command line tool to automatically generate some or all feature set files for 
 
 The generated class files will automatically reference each other through imports and injections. 
 
-(You can generate pascal-cased filenames with `--casing pascal`, ie. "ExampleModule.ts")
+(Tip: use `--casing pascal` to generate pascal-cased filenames, ie. "ExampleModule.ts")
 
 ## Install:
 
@@ -82,41 +82,59 @@ Your custom auth guard class name and location can be defined with `--auth-guard
 * The generated files will all have their imports and injected dependencies referenced correctly relative to each other, but you will still need to add these references to your main AppModule, or wherever you need to use them. In other words: this package doesn't edit existing files.
 * For now it will only generate TypeScript files (no plain JS), but you can customize the template files if you want to strip the TypeScript stuff (see below).
 
+## Using a Configuration File
+ You can specify generator configuration values by adding an `"ngen-config"` property inside your project's `tsconfig.app.json` or `tsconfig.json` file. For example:
+ 
+    // tsconfig.json
+    {
+        "ngen-config": {
+            "prefix": "src",
+            "modelDir": "models",
+            "templateDir": "templates",
+            "noSubdir": true,
+            "casing": "pascal",
+            "authGuardClass": "PrincipalGuard"
+            "authGuardDir": "modules/auth/lib/"
+        }
+    }
+
+
 ## All Options:
+Note: If using a configuration file, these command line options will always override the configuration file options.
 
-     -p <prefix>                    Specify root/prefix dir to generate in                                       optional
-     --prefix <prefix>              Specify root/prefix dir to generate in                                       optional
-
-     -a                             Generate all (Module + Controller + Service + Repository + Model             optional      default: false
-     --all                          Generate all (Module + Controller + Service + Repository + Model             optional      default: false
-
-     -m                             Generate a Module                                                            optional      default: false
-     --module                       Generate a Module                                                            optional      default: false
-     -r                             Generate a Repository for the model                                          optional      default: false
-     --repo                         Generate a Repository for the model                                          optional      default: false
-     --repository                   Generate a Repository for the model                                          optional      default: false
+     -a                             Generate all (Module + Controller + Service + Repository + Model                   optional      default: false
+     --all                          Generate all (Module + Controller + Service + Repository + Model                   optional      default: false
      
-     -d                             Generate the model files                                                     optional      default: false
-     --model                        Generate the model file                                                      optional      default: false
-     --model-name <name>            Specify a custom class name for the model                                    optional
-     --model-dir <dir>              Specify a subdirectory to put the model in (ie. 'models')                    optional
+     -m                             Generate a Module                                                                  optional      default: false
+     --module                       Generate a Module                                                                  optional      default: false
      
-     -c                             Generate a Controller for the model                                          optional      default: false
-     --controller                   Generate a Controller for the model                                          optional      default: false
+     -r                             Generate a Repository for the model                                                optional      default: false
+     --repo                         Generate a Repository for the model                                                optional      default: false
+     --repository                   Generate a Repository for the model                                                optional      default: false
      
-     -s                             Generate a Service for the model                                             optional      default: false
-     --service                      Generate a Service for the model                                             optional      default: false
+     -d                             Generate the model files                                                           optional      default: false
+     --model                        Generate the model file                                                            optional      default: false
+     --model-name <name>            Specify a custom class name for the model                                          optional
+     --model-dir <dir>              Specify a subdirectory to put the model in (ie. 'models')                          optional
      
-     --crud                         Generates CRUD actions within the Controller and Service                     optional      default: false
+     -c                             Generate a Controller for the model                                                optional      default: false
+     --controller                   Generate a Controller for the model                                                optional      default: false
      
-     --auth                         CRUD actions will add authentication guards, requiring a logged in user      optional      default: false
-     --auth-guard-class <name>      Name of a custom @(Guard<name>) class to use                                 optional
-     --auth-guard-dir <dir>         The location of the custom @Guard class file                                 optional
+     -s                             Generate a Service for the model                                                   optional      default: false
+     --service                      Generate a Service for the model                                                   optional      default: false
      
-     --template-dir <dir>           Specify a custom location of template files to use                           optional
-     --no-subdir                    Don't put generated files in <name> subdirectory (if not using a module)     optional      default: false
+     --crud                         Generates CRUD actions within the Controller and Service                           optional      default: false
      
-     --casing <pascal>              Use pascal-casing for filenames, ie. "ExampleController.ts"                  optional      default: false
+     -p <prefix>                    Specify root/prefix dir to generate in                                             optional
+     --prefix <prefix>              Specify root/prefix dir to generate in                                             optional
+     
+     --auth                         CRUD actions will add authentication guards, requiring a logged in user            optional      default: false
+     --auth-guard-class <name>      Name of a custom @(Guard<name>) class to use                                       optional
+     --auth-guard-dir <dir>         The location of the custom @Guard class file                                       optional
+     
+     --template-dir <dir>           The location of the template files to use                                          optional
+     --no-subdir                    Don't put generated files in <name> subdirectory (only if not using a module)      optional      default: false
+     
 
 
 ## Customizing Templates
@@ -124,8 +142,8 @@ To customize the template files, first copy them to your project with this comma
 
     ngen-copy-templates
     
-You can specify `--dir <dir>` to put the templates in a specific directory, otherwise they'll be put in a 'templates' directory.
+You can specify `--dir <dir>` to copy the templates to a specific directory, otherwise they'll be put in a 'templates' directory.
 
 (Specify `-f` to force-override existing files.)
 
-Then, edit the templates as needed, and specify their custom location in the ngen command with: `ngen --template-dir <dir>`.
+Then, edit the templates as needed, and specify their custom location in the ngen command with: `ngen --template-dir <dir>` (or add "templateDir" option to the config)
