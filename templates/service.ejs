@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= serviceFileName %>';<% } %>
-<% if (model || repository || crud) { %>import { <%= modelName %> } from './<%= modelFileName %>';<% } %>
+<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= repositoryFileName %>';<% } %>
+<% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelFileName %>';<% } %>
 
 @Injectable()
 export class <%=: name | capitalize %>Service {
@@ -10,36 +10,36 @@ export class <%=: name | capitalize %>Service {
     }
 
 <% if (crud) { -%>
-    public async getById(id: string): Promise<<%= modelName %>> {
+    public async getById(id: string): Promise<<%= modelClass %>> {
         return await this.<%= name %>Repository.findOneOrFail({ id });
     }
 
-    public create(@Request() req, <%= modelNameLower %>: <%= modelName %>): Promise<<%= modelName %>> {
-        console.log('create', <%= modelNameLower %>)
+    public create(@Request() req, <%= modelClassLower %>: <%= modelClass %>): Promise<<%= modelClass %>> {
+        console.log('create', <%= modelClassLower %>)
         <% if (repository || crud) { %>
-        <%= modelNameLower %> = this.<%= name %>Repository.create(<%= modelNameLower %>);
-        return this.<%= name %>Repository.save(<%= modelNameLower %>);
+        <%= modelClassLower %> = this.<%= name %>Repository.create(<%= modelClassLower %>);
+        return this.<%= name %>Repository.save(<%= modelClassLower %>);
         <% } %>
     }
 
-    public async update(@Request() req, <%= modelNameLower %>: <%= modelName %>): Promise<<%= modelName %>> {
-        console.log("update", <%= modelNameLower %>);
+    public async update(@Request() req, <%= modelClassLower %>: <%= modelClass %>): Promise<<%= modelClass %>> {
+        console.log("update", <%= modelClassLower %>);
         <% if (repository || crud) { %>
-        return this.<%= name %>Repository.save(<%= modelNameLower %>);
+        return this.<%= name %>Repository.save(<%= modelClassLower %>);
         <% } %>
     }
 
     public async remove(@Request() req, id: string) {
-        let <%= modelNameLower %> = await this.<%= name %>Repository.findOneOrFail({ id });
-        if (!<%= modelNameLower %>) {
-            throw "Object <%= modelNameLower %> does not exist";
+        let <%= modelClassLower %> = await this.<%= name %>Repository.findOneOrFail({ id });
+        if (!<%= modelClassLower %>) {
+            throw "Object <%= modelClassLower %> does not exist";
         }
         
         await this.<%= name %>Repository.delete(id);
-        return <%= modelNameLower %>;
+        return <%= modelClassLower %>;
     }
 
-    public async search(@Request() req): Promise<Array<<%= modelName %>>> {
+    public async search(@Request() req): Promise<Array<<%= modelClass %>>> {
         <% if (repository || crud) { %>
         return await this.<%= name %>Repository.find({
             <% if (auth) { %>where: { user: req.principal }<% } %>

@@ -19,27 +19,32 @@ function _getFileName(className, type, casing) {
     return `${className.toLowerCase()}.${type}`;
 }
 
+function _ensureTrailingSlash(str) {
+    return str.charAt(str.length-1) !== '/' ? (str + '/') : str;
+}
+
 function _findConfig() {
     let ngenConfig;
 
-    // look in tsconfig.app.json
-    let configFile = path.resolve("./tsconfig.app.json");
-    if (fs.existsSync(configFile)) {
-        let config = require(configFile);
-        if (config['ngen-config']) {
-            ngenConfig = config['ngen-config']
-        }
-    } 
-    
-    // look in tsconfig.json
-    if (!ngenConfig) {
-        configFile = path.resolve("./tsconfig.json");
+    function _read(configFile) {
+        let ngenConfig;
         if (fs.existsSync(configFile)) {
             let config = require(configFile);
             if (config['ngen-config']) {
                 ngenConfig = config['ngen-config']
             }
         }
+        return ngenConfig;
+    }
+
+    // look in tsconfig.app.json
+    let configFile = path.resolve("./tsconfig.app.json");
+    ngenConfig = _read(configFile);
+
+    // look in tsconfig.json
+    if (!ngenConfig) {
+        configFile = path.resolve("./tsconfig.json");
+        ngenConfig = _read(configFile);
     }
 
     return ngenConfig;
@@ -62,8 +67,10 @@ prog
 
 .option('-d', 'Generate the model files')
 .option('--model', 'Generate the model file')
-.option('--model-name <name>', 'Specify a custom class name for the model')
+.option('--model-class <name>', 'Specify a custom class name for the model')
 .option('--model-dir <dir>', 'Specify a subdirectory to put the model in (ie. \'models\')')
+.option('--model-base-class <class>', 'Specify a base class that your model should extend from')
+.option('--model-base-dir <dir>', 'Specify the import location for the base class model')
 
 .option('-c', 'Generate a Controller for the model')
 .option('--controller', 'Generate a Controller for the model')
@@ -93,26 +100,34 @@ prog
     // first see if there is a configuration file available, and start with that
     let config = _findConfig();
     if (config) {
+        console.log("Using tsconfig settings...");
+
         if (config["prefix"] && !o.prefix) 
-            o.prefix = config["prefix"] ;
+            o.prefix = config["prefix"];
 
-        if (config["model-dir"] && !o.modelDir) 
-            o.modelDir = config["model-dir"] ;
+        if (config["modelDir"] && !o.modelDir) 
+            o.modelDir = config["modelDir"];
 
-        if (config["template-dir"] && !o.templateDir) 
-            o.templateDir = config["template-dir"] ;
+        if (config["templateDir"] && !o.templateDir) 
+            o.templateDir = config["templateDir"];
 
-        if (config["no-subdir"] && !o.noSubdir) 
-            o.noSubdir = config["no-subdir"] ;
+        if (config["noSubdir"] && !o.noSubdir) 
+            o.noSubdir = config["noSubdir"];
 
         if (config["casing"] && !o.casing) 
-            o.casing = config["casing"] ;
+            o.casing = config["casing"];
 
-        if (config["auth-guard-class"] && !o.authGuardClass) 
-        o.authGuardClass = config["auth-guard-class"] ;
+        if (config["authGuardClass"] && !o.authGuardClass) 
+            o.authGuardClass = config["authGuardClass"];
 
-        if (config["auth-guard-dir"] && !o.authGuardDir) 
-            o.authGuardDir = config["auth-guard-dir"] ;
+        if (config["authGuardDir"] && !o.authGuardDir) 
+            o.authGuardDir = config["authGuardDir"];
+
+        if (config["modelBaseClass"] && !o.modelBaseClass) 
+            o.modelBaseClass = config["modelBaseClass"];
+
+        if (config["modelBaseDir"] && !o.modelBaseDir) 
+            o.modelBaseDir = config["modelBaseDir"];
     }
 
     // normalize and validate
@@ -132,8 +147,17 @@ prog
 
     // set auth guarding params if applicable
     if (o.auth) {
-        o.authGuardName = o.authGuardClass ? o.authGuardClass : 'PrincipalGuard';
-        o.authGuardDir =  o.authGuardDir ? (o.authGuardDir+'/') : 'modules/auth/lib/';
+        if (!o.authGuardClass)
+            throw "--auth-guard-class <name> must be specified if using authentication";
+        if (!o.authGuardDir)
+            throw "--auth-guard-dir <dir> must be specified if using authentication";
+    }
+
+    if (o.modelBaseClass && !o.modelBaseDir)
+        throw "Must specificy --model-base-dir <dir> if using a custom --model-base-class";
+
+    if (o.modelBaseDir) {
+        o.modelBaseDir = _ensureTrailingSlash(o.modelBaseDir);
     }
 
     // make containing folder
@@ -151,28 +175,26 @@ prog
     
     // MODEL ?
     if (o.model || o.repository || o.crud) {
-        if (!o.modelName) {
-            o.modelName = capitalize(o.name);
-            if (o.modelName.charAt(o.modelName.length-1) === 's') {
-                o.modelName = o.modelName.substr(0, o.modelName.length-1);
+        if (!o.modelClass) {
+            o.modelClass = capitalize(o.name);
+            if (o.modelClass.charAt(o.modelClass.length-1) === 's') {
+                o.modelClass = o.modelClass.substr(0, o.modelClass.length-1);
             }
         }
 
-        o.modelNameLower = o.modelName.toLowerCase();
+        o.modelClassLower = o.modelClass.toLowerCase();
 
         let outPathModel = outPath;
         if (o.modelDir) {
             outPathModel += '/' + o.modelDir;
-            if (o.modelName.charAt(o.modelName.length-1) !== '/') {
-                o.modelDir += '/';
-            }
+            o.modelDir = _ensureTrailingSlash(o.modelClass);
         } else {
             o.modelDir = '';
         }
 
         fs.mkdirSync(outPathModel, { recursive: true });
 
-        o.modelFileName = _getFileName(o.modelName, 'model', o.casing);
+        o.modelFileName = _getFileName(o.modelClass, 'model', o.casing);
         let outFile = `${outPathModel}/${o.modelFileName}.ts`;
 
         stagedFiles.push({ type: 'model', outFile });
@@ -193,7 +215,7 @@ prog
         stagedFiles.push({ type: 'repository', outFile });
     } else if (o.crud) {
         // use a generic repository
-        o.repositoryName = `Repository\<${o.modelName}\>`;
+        o.repositoryName = `Repository\<${o.modelClass}\>`;
         o.repositoryFileName = _getFileName(o.name, 'repository', o.casing);
         let outFile = `${outPath}/${o.repositoryFileName}.ts`;
         stagedFiles.push({ type: 'repository', outFile });

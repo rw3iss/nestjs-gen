@@ -9,6 +9,8 @@ A command line tool to automatically generate some or all feature set files for 
 
 The generated class files will automatically reference each other through imports and injections. 
 
+See the `./example_generated` folder to see an example of the generated code using all features + CRUD.
+
 (Tip: use `--casing pascal` to generate pascal-cased filenames, ie. "ExampleModule.ts")
 
 ## Install:
@@ -77,8 +79,8 @@ This will generate all the respective class files within "./modules/example/", w
 ## Things to Note:
 * Generated model class names will strip any trailing 's' in the given name argument, if one exists, unless you set the model class name explicitly with `--model-name <name>`.
 * If you specify `--repository` or `--crud`, a model will automatically be generated.
-* You can specify `--auth`, a `@Guard(<auth-guard-class>)` decorator will be added to the CRUD interfaces. 
-Your custom auth guard class name and location can be defined with `--auth-guard-class <class-name>` and `--auth-guard-location <dir>`.
+* You can specify `--auth`, and a `@Guard(<auth-guard-class>)` decorator will be added to the CRUD interfaces. 
+Your custom auth guard class name and location can be defined with `--auth-guard-class <class-name>` and `--auth-guard-location <dir>` (or put in tsconfig.json).
 * The generated files will all have their imports and injected dependencies referenced correctly relative to each other, but you will still need to add these references to your main AppModule, or wherever you need to use them. In other words: this package doesn't edit existing files.
 * For now it will only generate TypeScript files (no plain JS), but you can customize the template files if you want to strip the TypeScript stuff (see below).
 
@@ -93,8 +95,10 @@ Your custom auth guard class name and location can be defined with `--auth-guard
             "templateDir": "templates",
             "noSubdir": true,
             "casing": "pascal",
-            "authGuardClass": "PrincipalGuard"
-            "authGuardDir": "modules/auth/lib/"
+            "authGuardClass": "PrincipalGuard",
+            "authGuardDir": "modules/auth/lib",
+            "modelBaseClass": "EntityBase",
+            "modelBaseDIr": "modules/auth/lib"
         }
     }
 
@@ -146,4 +150,8 @@ You can specify `--dir <dir>` to copy the templates to a specific directory, oth
 
 (Specify `-f` to force-override existing files.)
 
-Then, edit the templates as needed, and specify their custom location in the ngen command with: `ngen --template-dir <dir>` (or add "templateDir" option to the config)
+Then, edit the templates as needed, and specify their custom location in the ngen command with: 
+    
+    ngen --template-dir <dir>
+
+(or add "templateDir" option to the configuration file)

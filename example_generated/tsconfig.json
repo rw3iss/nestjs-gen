@@ -1,0 +1,11 @@
+{
+    "ngen-config": {
+        "prefix": "example",
+        "templateDir": "templates",
+        "noSubdir": true,
+        "authGuardClass": "PrincipalGuard",
+        "authGuardDir": "modules/auth/lib",
+        "modelBaseClass": "EntityBase",
+        "modelBaseDir": "modules/auth/lib"
+    }
+}

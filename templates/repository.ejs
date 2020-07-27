@@ -1,7 +1,7 @@
 import { EntityRepository, Repository } from 'typeorm';
-import { <%= modelName %> } from './<%= modelDir %><%= modelFileName %>';
+import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';
 
-@EntityRepository(<%= modelName %>)
-export class <%=: name | capitalize %>Repository extends Repository<<%= modelName %>> {
+@EntityRepository(<%= modelClass %>)
+export class <%=: name | capitalize %>Repository extends Repository<<%= modelClass %>> {
 
 }

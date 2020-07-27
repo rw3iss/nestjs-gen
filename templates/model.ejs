@@ -1,8 +1,8 @@
-import { EntityBase } from 'models/EntityBase';
-import { Column, Entity, Index  } from 'typeorm';
+<% if (modelBaseClass) { %>import { <%= modelBaseClass %> } from '<%= modelBaseDir %><%= modelBaseClass %>';<% } %>
+import { Entity } from 'typeorm';
 
-@Entity('<%= modelNameLower %>')
-export class <%= modelName %> extends EntityBase {
+@Entity('<%= modelClassLower %>')
+export class <%= modelClass %> <% if (modelBaseClass) { %>extends EntityBase <% } %>{
 
     constructor() {
         super();

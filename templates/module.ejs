@@ -3,11 +3,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 <% if (controller) { %>import { <%=: name | capitalize %>Controller } from './<%= controllerFileName %>';<% } %>
 <% if (service) { %>import { <%=: name | capitalize %>Service } from './<%= serviceFileName %>';<% } %>
 <% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= repositoryFileName %>';
-<% } else if (false && crud) { %>import { Repository } from 'typeorm'; <% } %>
-<% if (model || repository || crud) { %>import { <%= modelName %> } from './<%= modelFileName %>';<% } %>
+<% } else if (false && crud) { %>import { Repository } from 'typeorm'; <% } -%>
+<% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelFileName %>';<% } %>
 
 @Module({
-<% if (model || repository || crud) { %>imports: [TypeOrmModule.forFeature([<%= modelName %>])]<% if (controller || service || repository || crud) { %>,<% } %><% } %>
+<% if (model || repository || crud) { %>imports: [TypeOrmModule.forFeature([<%= modelClass %>])]<% if (controller || service || repository || crud) { %>,<% } %><% } %>
     <% if (controller) { %>controllers: [<%=: name | capitalize %>Controller],<% } %>
     <% if (service || repository || crud) { %>providers: [
         <% if (service) { %><%=: name | capitalize %>Service<% if (repository) { %>,<% } %><% } %>
