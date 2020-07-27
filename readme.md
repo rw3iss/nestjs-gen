@@ -9,7 +9,7 @@ A command line tool to automatically generate some or all feature set files for 
 
 The generated class files will automatically reference each other through imports and injections. 
 
-For now it will only generate TypeScript files (normal JS todo).
+For now it will only generate TypeScript files (no plain JS), but you can edit the template files if you want to strip the TypeScript stuff.
 
 ## Install:
 
@@ -51,7 +51,7 @@ This will generate:
     ./modules/example/example.model.js          (ExampleModel)
     (and corresponding CRUD interface within controller and service)
 
-#### Generate just a Controller, Repository, and Test model (not in a module)
+#### Generate just a Controller, Repository, and Example model (no module)
 
     ngen example --crud
 
