@@ -106,38 +106,42 @@ Your custom auth guard class name and location can be defined with `--auth-guard
 ## All Options:
 Note: If using a configuration file, these command line options will always override the configuration file options.
 
-     -a                             Generate all (Module + Controller + Service + Repository + Model                   optional      default: false
-     --all                          Generate all (Module + Controller + Service + Repository + Model                   optional      default: false
+     -a                              Generate all (Module + Controller + Service + Repository + Model                   optional      default: false
+     --all                           Generate all (Module + Controller + Service + Repository + Model                   optional      default: false
      
-     -m                             Generate a Module                                                                  optional      default: false
-     --module                       Generate a Module                                                                  optional      default: false
+     -m                              Generate a Module                                                                  optional      default: false
+     --module                        Generate a Module                                                                  optional      default: false
      
-     -r                             Generate a Repository for the model                                                optional      default: false
-     --repo                         Generate a Repository for the model                                                optional      default: false
-     --repository                   Generate a Repository for the model                                                optional      default: false
+     -r                              Generate a Repository for the model                                                optional      default: false
+     --repo                          Generate a Repository for the model                                                optional      default: false
+     --repository                    Generate a Repository for the model                                                optional      default: false
      
-     -d                             Generate the model files                                                           optional      default: false
-     --model                        Generate the model file                                                            optional      default: false
-     --model-name <name>            Specify a custom class name for the model                                          optional
-     --model-dir <dir>              Specify a subdirectory to put the model in (ie. 'models')                          optional
+     -d                              Generate the model files                                                           optional      default: false
+     --model                         Generate the model file                                                            optional      default: false
+     --model-class <name>            Specify a custom class name for the model                                          optional
+     --model-dir <dir>               Specify a subdirectory to put the model in (ie. 'models')                          optional
+     --model-base-class <class>      Specify a base class that your model should extend from                            optional
+     --model-base-dir <dir>          Specify the import location for the base class model                               optional
      
-     -c                             Generate a Controller for the model                                                optional      default: false
-     --controller                   Generate a Controller for the model                                                optional      default: false
+     -c                              Generate a Controller for the model                                                optional      default: false
+     --controller                    Generate a Controller for the model                                                optional      default: false
      
-     -s                             Generate a Service for the model                                                   optional      default: false
-     --service                      Generate a Service for the model                                                   optional      default: false
+     -s                              Generate a Service for the model                                                   optional      default: false
+     --service                       Generate a Service for the model                                                   optional      default: false
      
-     --crud                         Generates CRUD actions within the Controller and Service                           optional      default: false
+     --crud                          Generates CRUD actions within the Controller and Service                           optional      default: false
      
-     -p <prefix>                    Specify root/prefix dir to generate in                                             optional
-     --prefix <prefix>              Specify root/prefix dir to generate in                                             optional
+     -p <prefix>                     Specify root/prefix dir to generate in                                             optional
+     --prefix <prefix>               Specify root/prefix dir to generate in                                             optional
      
-     --auth                         CRUD actions will add authentication guards, requiring a logged in user            optional      default: false
-     --auth-guard-class <name>      Name of a custom @(Guard<name>) class to use                                       optional
-     --auth-guard-dir <dir>         The location of the custom @Guard class file                                       optional
+     --auth                          CRUD actions will add authentication guards, requiring a logged in user            optional      default: false
+     --auth-guard-class <name>       Name of a custom @(Guard<name>) class to use                                       optional
+     --auth-guard-dir <dir>          The location of the custom @Guard class file                                       optional
      
-     --template-dir <dir>           The location of the template files to use                                          optional
-     --no-subdir                    Don't put generated files in <name> subdirectory (only if not using a module)      optional      default: false
+     --template-dir <dir>            The location of the template files to use                                          optional
+     --no-subdir                     Don't put generated files in <name> subdirectory (only if not using a module)      optional      default: false
+     
+     --casing <pascal>               default = "example.controller.ts", pascal = "ExampleController.ts"                 optional
      
 
 
