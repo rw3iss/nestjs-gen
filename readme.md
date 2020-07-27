@@ -11,6 +11,8 @@ The generated class files will automatically reference each other through import
 
 For now it will only generate TypeScript files (no plain JS), but you can edit the template files if you want to strip the TypeScript stuff.
 
+Template/schematic files can be edited (see below).
+
 ## Install:
 
     // Globally:
@@ -74,12 +76,12 @@ Or shorter:
 
 This will generate all the respective class files within "./modules/example/".
 
-## To Note:
-* Generated models will strip any trailing 's' in the given name argument, if one exists, unless you set the model class name explicitly with --model-name.
-* If you specify --repository or --crud, a model will automatically be generated.
-* You can specify --auth and `@Guard(<auth-guard-class>)` decorators will be added to the CRUD interfaces. 
-Your custom auth guard class name and location can be defined with --auth-guard-class and --auth-guard-location.
-
+## Things to Note:
+* Generated model class names will strip any trailing 's' in the given name argument, if one exists, unless you set the model class name explicitly with `--model-name <name>`.
+* If you specify `--repository` or `--crud`, a model will automatically be generated.
+* You can specify `--auth` and `@Guard(<auth-guard-class>)` decorators will be added to the CRUD interfaces. 
+Your custom auth guard class name and location can be defined with `--auth-guard-class <class-name>` and `--auth-guard-location <dir>`.
+* The generated files will all have their imports and injected dependencies referenced correctly relative to each other, but you will still need to add these references to your main AppModule, or wherever you need to use them. In other words: this package doesn't edit existing files.
 
 ## All Options:
 
@@ -117,10 +119,13 @@ Your custom auth guard class name and location can be defined with --auth-guard-
      --no-subdir                    Don't put generated files in <name> subdirectory (if not using a module)     optional      default: false
 
 
-## Other Things to Note:
-*The generated files will all reference eachother correctly, but you will still need to add these references to your main AppModule, or wherever you need to use them.
- 
-In other words: this package doesn't edit existing files.
+## Customizing Templates
+To customize the template files, first copy them to your project with this command:
 
-## Editing Templates
-To edit the template files, copy all of them from this repository's /templates directory (or ./node_modules/nestjs-gen/templates locally), put them in a custom folder in the root of your project, edit as needed, and specify their location with --template-dir <folder>.
+    ngen-copy-templates
+    
+You can specify `--dir <dir>` to put the templates in a specific directory, otherwise they'll be put in a 'templates' directory.
+
+(Specify `-f` to force-override existing files.)
+
+Then, edit the templates as needed, and specify their custom location in the ngen command with: `ngen --template-dir <dir>`.

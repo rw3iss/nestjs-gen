@@ -1,7 +1,50 @@
-import { EntityRepository, Repository } from 'typeorm';
-import { <%= modelName %> } from './<%= modelDir %>><%= modelNameLower %>.model';
+import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= name %>.repository';<% } %>
+<% if (model || repository || crud) { %>import { <%= modelName %> } from './<%= modelDir %><%= modelNameLower %>.model';<% } %>
 
-@EntityRepository(<%= modelName %>)
-export class <%=: name | capitalize %>Repository extends Repository<<%= modelName %>> {
+@Injectable()
+export class <%=: name | capitalize %>Service {
 
+    public constructor(<% if (repository || crud) { %>@InjectRepository(<%= repositoryName %>) private <%=: name  %>Repository: <%= repositoryName %><% } %>) {
+    }
+
+<% if (crud) { -%>
+    public async getById(id: string): Promise<<%= modelName %>> {
+        return await this.<%= name %>Repository.findOneOrFail({ id });
+    }
+
+    public create(@Request() req, <%= modelNameLower %>: <%= modelName %>): Promise<<%= modelName %>> {
+        console.log('create', <%= modelNameLower %>)
+        <% if (repository || crud) { %>
+        <%= modelNameLower %> = this.<%= name %>Repository.create(<%= modelNameLower %>);
+        return this.<%= name %>Repository.save(<%= modelNameLower %>);
+        <% } %>
+    }
+
+    public async update(@Request() req, <%= modelNameLower %>: <%= modelName %>): Promise<<%= modelName %>> {
+        console.log("update", <%= modelNameLower %>);
+        <% if (repository || crud) { %>
+        return this.<%= name %>Repository.save(<%= modelNameLower %>);
+        <% } %>
+    }
+
+    public async remove(@Request() req, id: string) {
+        let <%= modelNameLower %> = await this.<%= name %>Repository.findOneOrFail({ id });
+        if (!<%= modelNameLower %>) {
+            throw "Object <%= modelNameLower %> does not exist";
+        }
+        
+        await this.<%= name %>Repository.delete(id);
+        return <%= modelNameLower %>;
+    }
+
+    public async search(@Request() req): Promise<Array<<%= modelName %>>> {
+        <% if (repository || crud) { %>
+        return await this.<%= name %>Repository.find({
+            <% if (auth) { %>where: { user: req.principal }<% } %>
+        });
+    <% } %>
+    }
+<% } %>
 }
