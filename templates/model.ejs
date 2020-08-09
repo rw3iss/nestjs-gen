@@ -7,8 +7,7 @@ export class <%= modelClass %> <% if (modelBaseClass) { %>extends <%= modelBaseC
     constructor() {
         super();
     }
-
-<% if (modelProps) { %>
+<% if (modelProps) { -%>
     <% Object.keys(modelProps).forEach(function(prop) { %>
     @Column()
     <%= prop %>: <%= modelProps[prop] %>;
