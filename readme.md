@@ -83,7 +83,7 @@ This will generate all the respective class files within "./modules/example/", w
 
     ngen example -a --model "prop:type id:number name:string prop:Anything"
 
-If you specify a string to the --model argumenent, the generatd model file will add the given properties, using the format propName:propType. propType will be used as the exact class name, but will not be imported (if using a custom class), so you have to add the import yourself, for now.
+If you specify a stringor properties to the --model argumenent, the generated model file will add the given properties, using the format propName:propType. It will also add a @Column() decorator for each properties. propType will be used as the exact class name, but will not be imported (if using a custom class), so you have to add the import yourself, for now. Currently does not support adding other decorators (ie. @PrimaryGeneratedColumn(), joins, etc), or custom @Column({}) definitions, which must be added manually, for now.
 
 
 ## Things to Note:
