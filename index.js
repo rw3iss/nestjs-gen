@@ -1,59 +1,64 @@
 #!/usr/bin/env node
 
+const pjson = require(__dirname + '/package.json');
 const prog = require('caporal');
 const fs = require('fs');
 const path = require('path');
 const generate = require('./lib/generator');
+const TypeHelper = require('./lib/TypeHelper');
+
+let version = pjson ? pjson.version : '<unknown version>';
 
 prog
-.version('1.0.0')
+.version(version)
 
-.argument('<name>', 'Name of the model or module')
+.argument('<name>',                     'Name of the model or module')
 
-.option('-a', 'Generate all (Module + Controller + Service + Repository + Model')
-.option('--all', 'Generate all (Module + Controller + Service + Repository + Model')
+.option('-a',                           'Generate all (Module + Controller + Service + Repository + Model')
+.option('--all',                        'Generate all (Module + Controller + Service + Repository + Model')
 
-.option('-m', 'Generate a Module')
-.option('--module', 'Generate a Module')
+.option('-m',                           'Generate a Module')
+.option('--module',                     'Generate a Module')
 
-.option('-r', 'Generate a Repository for the model')
-.option('--repo', 'Generate a Repository for the model')
-.option('--repository', 'Generate a Repository for the model')
+.option('-r',                           'Generate a Repository for the model')
+.option('--repo',                       'Generate a Repository for the model')
+.option('--repository',                 'Generate a Repository for the model')
 
-.option('-d', 'Generate the model file')
-.option('--model', 'Generate the model file')
-.option('--model-class <name>', 'Specify a custom class name for the model')
-.option('--model-dir <dir>', 'Specify a subdirectory to put the model in (ie. \'models\')')
-.option('--model-base-class <class>', 'Specify a base class that your model should extend from')
-.option('--model-base-dir <dir>', 'Specify the import location for the base class model')
+.option('-d',                           'Generate the model file')
+.option('--model [test]',               'Generate the model file (and optional model definition)')
+.option('--model-class <name>',         'Specify a custom class name for the model')
+.option('--model-dir <dir>',            'Specify a subdirectory to put the model in (ie. \'models\')')
+.option('--model-base-class <class>',   'Specify a base class that your model should extend from')
+.option('--model-base-dir <dir>',       'Specify the import location for the base class model')
 
-.option('-c', 'Generate a Controller for the model')
-.option('--controller', 'Generate a Controller for the model')
+.option('-c',                           'Generate a Controller for the model')
+.option('--controller',                 'Generate a Controller for the model')
 
-.option('-s', 'Generate a Service for the model')
-.option('--service', 'Generate a Service for the model')
+.option('-s',                           'Generate a Service for the model')
+.option('--service',                    'Generate a Service for the model')
 
 // make interface?
-.option('--crud', 'Generates CRUD actions within the Controller and Service')
+.option('--crud',                       'Generates CRUD actions within the Controller and Service')
 
 // add prefix/subdir to generate in
-.option('-p <prefix>', 'Specify root/prefix dir to generate in')
-.option('--prefix <prefix>', 'Specify root/prefix dir to generate in')
+.option('-p <prefix>',                  'Specify root/prefix dir to generate in')
+.option('--prefix <prefix>',            'Specify root/prefix dir to generate in')
 
 // add authentication guards?
-.option('--auth', 'CRUD actions will add authentication guards, requiring a logged in user')
-.option('--auth-guard-class <name>', 'Name of a custom @(Guard<name>) class to use')
-.option('--auth-guard-dir <dir>', 'The location of the custom @Guard class file')
+.option('--auth',                       'CRUD actions will add authentication guards, requiring a logged in user')
+.option('--auth-guard-class <name>',    'Name of a custom @(Guard<name>) class to use')
+.option('--auth-guard-dir <dir>',       'The location of the custom @Guard class file')
 
-.option('--template-dir <dir>', 'The location of the template files to use')
-.option('--no-subdir', 'Don\'t put generated files in <name> subdirectory (only if not using a module)')
+.option('--template-dir <dir>',         'The location of the template files to use')
+.option('--no-subdir',                  'Don\'t put generated files in <name> subdirectory (only if not using a module)')
 
-.option('--casing <pascal>', 'default = "example.controller.ts", pascal = "ExampleController.ts"')
+.option('--casing <pascal>',            'default = "example.controller.ts", pascal = "ExampleController.ts"')
 
 .action((args, o, logger) => {
 
     // first see if there is a configuration file available, and start with that
-    let config = _findConfig();
+    const config = _findConfig();
+
     if (config) {
         console.log("Using tsconfig settings...");
 
@@ -85,11 +90,14 @@ prog
             o.modelBaseDir = config["modelBaseDir"];
     }
 
+    let modelDef = undefined;
+
     // normalize and validate
     if (o.p) { o.prefix = o.p };
     if (o.a || o.all) { o.all = true };
     if (o.m || o.module) { o.module = true };
     if (o.r || o.repo || o.repository) { o.repository = true };
+    if (o.model && typeof o.model == 'string') { modelDef = o.model };
     if (o.md || o.model || o.repository) { o.model = true };
     if (o.c || o.controller) { o.controller = true };
     if (o.s || o.service) { o.service = true };
@@ -100,7 +108,7 @@ prog
 
     o.name = args.name;
 
-    // set auth guarding params if applicable
+    // set auth guarding params if applicable?
     if (o.auth) {
         if (!o.authGuardClass)
             throw "--auth-guard-class <name> must be specified if using authentication";
@@ -115,7 +123,17 @@ prog
         o.modelBaseDir = _ensureTrailingSlash(o.modelBaseDir);
     }
 
-    // make containing folder
+    // Parse out model property definitions, if given
+    if (modelDef) {
+        o.modelProps = TypeHelper.parseModelProps(modelDef);
+    } else {
+        o.modelProps = undefined;
+    }
+
+    ////////////////////
+
+
+    // make containing folder for the module, if using, or otherwise the package name
     let outPath =  path.resolve((o.prefix ? o.prefix : './'));
     if (o.module) {
         outPath += `/modules/${o.name}`;
@@ -125,7 +143,8 @@ prog
 
     fs.mkdirSync(outPath, { recursive: true });
 
-    // container for which files will be generated
+    // Stage generation of each type of file...
+
     let stagedFiles = [];
     
     // MODEL ?
@@ -189,6 +208,7 @@ prog
         stagedFiles.push({ type: 'service', outFile });
     }
 
+    // Actually output the staged files
     stagedFiles.forEach(fd => {
         generate(fd.type, o, fd.outFile);
     });
@@ -198,7 +218,7 @@ prog
 prog.parse(process.argv);
 
 
-// utils
+// Utils ------------------------
 
 function _capitalize(str) {
     return str.charAt(0).toUpperCase() + str.slice(1);
@@ -227,11 +247,11 @@ function _findConfig() {
         return ngenConfig;
     }
 
-    // look in tsconfig.app.json
+    // look in tsconfig.app.json?
     let configFile = path.resolve("./tsconfig.app.json");
     ngenConfig = _read(configFile);
 
-    // look in tsconfig.json
+    // look in tsconfig.json?
     if (!ngenConfig) {
         configFile = path.resolve("./tsconfig.json");
         ngenConfig = _read(configFile);
