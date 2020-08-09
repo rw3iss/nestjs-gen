@@ -1,11 +1,17 @@
 <% if (modelBaseClass) { %>import { <%= modelBaseClass %> } from '<%= modelBaseDir %><%= modelBaseClass %>';<% } %>
-import { Entity } from 'typeorm';
+import { Entity<% if (modelProps) { %>, Column, PrimaryGeneratedColumn<% } %> } from 'typeorm';
 
 @Entity('<%= modelClassLower %>')
-export class <%= modelClass %> <% if (modelBaseClass) { %>extends EntityBase <% } %>{
+export class <%= modelClass %> <% if (modelBaseClass) { %>extends <%= modelBaseClass %> <% } %>{
 
     constructor() {
         super();
     }
 
+<% if (modelProps) { %>
+    <% Object.keys(modelProps).forEach(function(prop) { %>
+    @Column()
+    <%= prop %>: <%= modelProps[prop] %>;
+    <% }) %>
+<% } -%>
 }
