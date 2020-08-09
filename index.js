@@ -25,7 +25,7 @@ prog
 .option('--repository',                 'Generate a Repository for the model')
 
 .option('-d',                           'Generate the model file')
-.option('--model [test]',               'Generate the model file (and optional model definition)')
+.option('--model [...prop:type]',               'Generate the model file (and optional model definition)')
 .option('--model-class <name>',         'Specify a custom class name for the model')
 .option('--model-dir <dir>',            'Specify a subdirectory to put the model in (ie. \'models\')')
 .option('--model-base-class <class>',   'Specify a base class that your model should extend from')

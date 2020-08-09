@@ -53,6 +53,7 @@ This will generate:
     ./modules/example/example.model.js          (Example)
     (and corresponding CRUD interface within the controller and service)
 
+
 #### Generate just a Controller, Repository, and Example model (no module)
 
     ngen example --crud
@@ -66,6 +67,7 @@ This will generate:
 
 (Tip: If you want the files generated in their own module, specify `--module`)
 
+
 #### Generate each specific thing you want
 
     ngen example --module --controller --service --repository --model --crud
@@ -75,6 +77,14 @@ Or shorter:
     ngen example -m -c -s -r -d --crud
 
 This will generate all the respective class files within "./modules/example/", with CRUD interfaces.
+
+
+#### Specifying model properties (optional) 
+
+    ngen example -a --model "prop:type id:number name:string prop:Anything"
+
+If you specify a string to the --model argumenent, the generatd model file will add the given properties, using the format propName:propType. propType will be used as the exact class name, but will not be imported (if using a custom class), so you have to add the import yourself, for now.
+
 
 ## Things to Note:
 * Generated model class/file names will strip any trailing 's' in the given name, if one exists, unless you set the model class name explicitly with `--model-class <name>`.
@@ -117,7 +127,7 @@ Note: If using a configuration file, these command line options will always over
      --repository                    Generate a Repository for the model                                                optional      default: false
      
      -d                              Generate the model file                                                            optional      default: false
-     --model                         Generate the model file                                                            optional      default: false
+     --model [...prop:type]          Generate the model file (and optional model definition)                            optional
      --model-class <name>            Specify a custom class name for the model                                          optional
      --model-dir <dir>               Specify a subdirectory to put the model in (ie. 'models')                          optional
      --model-base-class <class>      Specify a base class that your model should extend from                            optional
@@ -137,8 +147,9 @@ Note: If using a configuration file, these command line options will always over
      --auth                          CRUD actions will add authentication guards, requiring a logged in user            optional      default: false
      --auth-guard-class <name>       Name of a custom @(Guard<name>) class to use                                       optional
      --auth-guard-dir <dir>          The location of the custom @Guard class file                                       optional
-     
+    
      --template-dir <dir>            The location of the template files to use                                          optional
+    
      --no-subdir                     Don't put generated files in <name> subdirectory (only if not using a module)      optional      default: false
      
      --casing <pascal>               default = "example.controller.ts", pascal = "ExampleController.ts"                 optional
