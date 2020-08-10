@@ -108,7 +108,7 @@ Your custom auth guard class name and location can be defined with `--auth-guard
             "authGuardClass": "PrincipalGuard",
             "authGuardDir": "modules/auth/lib",
             "modelBaseClass": "EntityBase",
-            "modelBaseDIr": "modules/auth/lib"
+            "modelBaseDir": "modules/auth/lib"
         }
     }
 
