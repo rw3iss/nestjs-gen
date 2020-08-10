@@ -161,7 +161,7 @@ prog
         let outPathModel = outPath;
         if (o.modelDir) {
             outPathModel += '/' + o.modelDir;
-            o.modelDir = _ensureTrailingSlash(o.modelClass);
+            o.modelDir = _ensureTrailingSlash(o.modelDir);
         } else {
             o.modelDir = '';
         }
