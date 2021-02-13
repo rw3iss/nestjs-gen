@@ -10,7 +10,7 @@ export class <%=: name | capitalize %>Service {
     }
 
 <% if (crud) { -%>
-    public async getById(id: string): Promise<<%= modelClass %>> {
+    public async getById(id: number): Promise<<%= modelClass %>> {
         return await this.<%= name %>Repository.findOneOrFail({ id });
     }
 
@@ -29,7 +29,7 @@ export class <%=: name | capitalize %>Service {
         <% } %>
     }
 
-    public async remove(@Request() req, id: string) {
+    public async remove(@Request() req, id: number) {
         let <%= modelClassLower %> = await this.<%= name %>Repository.findOneOrFail({ id });
         if (!<%= modelClassLower %>) {
             throw "Object <%= modelClassLower %> does not exist";

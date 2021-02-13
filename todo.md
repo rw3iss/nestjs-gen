@@ -1,0 +1,2 @@
+-add option to output 'console.log' statements
+-add option to add logging statements (to some arbitrary logging interface) to all method calls

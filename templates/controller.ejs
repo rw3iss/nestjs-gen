@@ -16,7 +16,7 @@ export class <%=: name | capitalize %>Controller {
 
 <% if (crud) { -%>
     @Get('/:id')
-    public async getById(id: string): Promise<<%= modelClass %>> {
+    public async getById(id: number): Promise<<%= modelClass %>> {
         <% if (service) { %>
         return await this.<%= name %>Service.getById(id);
         <% } else if (repository || crud) { %>
@@ -43,7 +43,7 @@ public create(@Request() req, @Body() body: any): Promise<<%= modelClass %>> {
     @Put('/:id')
     <% if (auth) { %>@UseGuards(<%= authGuardClass %>)
     <% } -%>
-public async update(@Request() req, @Param('id', ParseUUIDPipe) id: string, @Body() body: any): Promise<<%= modelClass %>> {
+public async update(@Request() req, @Param('id', ParseUUIDPipe) id: number, @Body() body: any): Promise<<%= modelClass %>> {
         console.log("update", body);
         <% if (service) { %>
         let <%= modelClassLower %>: <%= modelClass %> = await this.<%= name %>Service.getById(id);
@@ -66,7 +66,7 @@ public async update(@Request() req, @Param('id', ParseUUIDPipe) id: string, @Bod
     @Delete('/:id')
     <% if (auth) { %>@UseGuards(<%= authGuardClass %>)
     <% } -%>
-public async remove(@Request() req, @Param('id', ParseUUIDPipe) id: string, @Body() body: any): Promise<<%= modelClass %>> {
+public async remove(@Request() req, @Param('id', ParseUUIDPipe) id: number, @Body() body: any): Promise<<%= modelClass %>> {
         console.log("remove", body);
         <% if (service) { %>
         return this.<%= name %>Service.remove(req, id);

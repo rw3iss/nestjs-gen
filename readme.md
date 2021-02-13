@@ -11,7 +11,7 @@ The generated class files will automatically reference each other through import
 
 See the `./example_generated` folder to see an example of the generated code using all features + CRUD.
 
-(Tip: use `--casing pascal` to generate pascal-cased filenames, ie. "ExampleModule.ts")
+(**Tip:** use `--casing pascal` to generate pascal-cased filenames, ie. "ExampleModule.ts")
 
 ## Install:
 
@@ -26,23 +26,27 @@ See the `./example_generated` folder to see an example of the generated code usi
 
 ## Usage:
 
-(If using with local project only, replace `ngen` below with: `./node_modules/.bin/ngen`)
+(If using with local project only, replace `ngen` below with: `./node_modules/.bin/ngen`, or alias it)
 
-#### Generate a Module / Controller / Service / Repository / Model (or all):
+**Note:** You will need to have a database configured with NestJS in order to use the repositories. See: https://docs.nestjs.com/techniques/database
+
+
+### Generate a Module / Controller / Service / Repository / Model (or all):
 
     ngen <name> <options>
 
 
 This will generate a folder \<name> within the current directory, and then all specified classes according to the options.  See below for examples.
 
-(Tip: Use --prefix to place files within a prefix directory, from the current folder)
+(**Tip:** Use --prefix to place files within a prefix directory, from the current folder)
 
-(Tip: Use --crud to automatically generate CRUD interfaces within the Controller and Service classes)
+(**Tip:** Use --crud to automatically generate CRUD interfaces within the Controller and Service classes)
 
+*(See how to set these up as configuration options in tsconfig.json below)*
 
 ## Examples:
 
-#### Generate a Module with all features (module, controller, service, repository, and model):
+### Generate a Module with all features (module, controller, service, repository, and model):
 
     ngen example --all
 
@@ -56,7 +60,7 @@ This will generate:
     (and corresponding CRUD interface within the controller and service)
 
 
-#### Generate just a Controller, Repository, and Example model (no module)
+### Generate just a Controller, Repository, and Example model (no module):
 
     ngen example --crud
 
@@ -70,7 +74,7 @@ This will generate:
 (Tip: If you want the files generated in their own module, specify `--module`)
 
 
-#### Generate each specific thing you want
+### Generate each specific thing you want:
 
     ngen example --module --controller --service --repository --model --crud
 
@@ -81,11 +85,17 @@ Or shorter:
 This will generate all the respective class files within "./modules/example/", with CRUD interfaces.
 
 
-#### Specifying model properties (optional) 
+### Specifying model properties (optional):
 
     ngen example -a --model "prop:type id:number name:string prop:Anything"
 
-If you specify a stringor properties to the --model argumenent, the generated model file will add the given properties, using the format propName:propType. It will also add a @Column() decorator for each properties. propType will be used as the exact class name, but will not be imported (if using a custom class), so you have to add the import yourself, for now. Currently does not support adding other decorators (ie. @PrimaryGeneratedColumn(), joins, etc), or custom @Column({}) definitions, which must be added manually, for now.
+If you specify a string of properties to the --model argumenent, the generated model file will add the given properties to the class definition, using the format propName:propType. 
+
+**Note**: An 'id: number' property will automaticaly be generated, with an @PrimaryGeneratedColumn() decorator, because TypeOrm requires at least this property to exist. You can change this property name by passing a property with a type of 'primary', and it will add the property with the decorate, and a type of 'number'. For example: ```--model "someIdentifier:primary"```.
+
+It will also add a @Column() decorator for each other property. *propType* will be used as the exact class name, but will not be imported (if using a custom class), so you have to add the import yourself, for now.
+
+*(Currently does not support adding other decorators (ie. joins/relationships), or custom @Column({}) definition properties, which must be added manually, for now.)*
 
 
 ## Things to Note:
@@ -93,11 +103,14 @@ If you specify a stringor properties to the --model argumenent, the generated mo
 * If you specify `--repository` or `--crud`, a model will automatically be generated.
 * You can specify `--auth`, and a `@Guard(<auth-guard-class>)` decorator will be added to the CRUD interfaces. 
 Your custom auth guard class name and location can be defined with `--auth-guard-class <class-name>` and `--auth-guard-location <dir>` (or put in tsconfig.json).
-* The generated files will all have their imports and injected dependencies referenced correctly relative to each other, but you will still need to add these references to your main AppModule, or wherever you need to use them. In other words: this package doesn't edit existing files.
+* The generated files will all have their imports and injected dependencies referenced correctly relative to each other, but you will still need to add these references to your main AppModule, or wherever you need to use them. In other words: **this package doesn't edit existing files.**
+* Similarly, modules do not export any classes (ie. Service) by default. You have to add those classes to the generated Module file's exports array manually, for now.
 * For now it will only generate TypeScript files (no plain JS), but you can customize the template files if you want to strip the TypeScript stuff (see below).
 
 ## Using a Configuration File
- You can specify generator configuration values by adding an `"ngen-config"` property inside your project's `tsconfig.app.json` or `tsconfig.json` file. For example:
+ You can specify generator configuration values by adding an `"ngen-config"` property inside your project's `tsconfig.app.json` or `tsconfig.json` file. 
+ 
+ For example (all of these are optional):
  
     // tsconfig.json
     {
@@ -116,7 +129,7 @@ Your custom auth guard class name and location can be defined with `--auth-guard
 
 
 ## All Options:
-Note: If using a configuration file, these command line options will always override the configuration file options.
+**Note:** If using a configuration file, these command line options will always override the configuration file options.
 
      -a                              Generate all (Module + Controller + Service + Repository + Model                   optional      default: false
      --all                           Generate all (Module + Controller + Service + Repository + Model                   optional      default: false
@@ -158,17 +171,17 @@ Note: If using a configuration file, these command line options will always over
      
 
 
-## Customizing Templates
+## Customizing the Templates
 To customize the template files, first copy them to your project with this command:
 
     ngen-copy-templates
+
+    (./node_modules/bin/ngen-copy-templates if installed locally)
     
-You can specify `--dir <dir>` to copy the templates to a specific directory, otherwise they'll be put in a 'templates' directory.
+You can specify `--dir <dir>` to copy the templates to a specific directory, otherwise they'll be put in a *templates/* directory.
 
 (Specify `-f` to force-override existing files.)
 
-Then, edit the templates as needed, and specify their custom location in the ngen command with: 
+Then, edit the templates as needed, and specify their custom location in the ngen-config section of the configuration, or with this command:
     
     ngen --template-dir <dir>
-
-(or add "templateDir" option to the configuration file)
