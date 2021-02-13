@@ -3,10 +3,12 @@ import { Entity<% if (modelProps) { %>, Column, PrimaryGeneratedColumn<% } %> } 
 
 @Entity('<%= modelClassLower %>')
 export class <%= modelClass %> <% if (modelBaseClass) { %>extends <%= modelBaseClass %> <% } %>{
-
+<% if (modelBaseClass) { %>
     constructor() {
         super();
     }
+<% } %>
+
 <% if (modelProps) { -%>
     <% Object.keys(modelProps).forEach(function(prop) { %>
     @Column()

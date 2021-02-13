@@ -4,7 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 <% if (service) { %>import { <%=: name | capitalize %>Service } from './<%= serviceFileName %>';<% } %>
 <% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= repositoryFileName %>';
 <% } else if (false && crud) { %>import { Repository } from 'typeorm'; <% } -%>
-<% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelFileName %>';<% } %>
+<% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';<% } %>
 
 @Module({
 <% if (model || repository || crud) { %>imports: [TypeOrmModule.forFeature([<%= modelClass %>])]<% if (controller || service || repository || crud) { %>,<% } %><% } %>
