@@ -1,4 +1,4 @@
-<% if (modelBaseClass) { %>import { <%= modelBaseClass %> } from '<%= modelBaseDir %><%= modelBaseClass %>';<% } %>
+<% if (modelBaseClass) { %>import { <%= modelBaseClass %> } from '<%= modelBaseDir %><%= modelBaseClass %>';<% } -%>
 import { Entity<% if (modelProps) { %>, Column, PrimaryGeneratedColumn<% } %> } from 'typeorm';
 
 @Entity('<%= modelClassLower %>')

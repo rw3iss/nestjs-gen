@@ -21,6 +21,8 @@ See the `./example_generated` folder to see an example of the generated code usi
     // Local project only:
     npm install nestjs-gen
 
+    // nestjs-gen also relies on typeorm, so in your project:
+    npm install --save typeorm @nestjs/typeorm
 
 ## Usage:
 
