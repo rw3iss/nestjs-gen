@@ -8,12 +8,10 @@ export class <%= modelClass %> <% if (modelBaseClass) { %>extends <%= modelBaseC
         super();
     }
 <% } -%>
-
 <% if (!Object.values(modelProps).includes('primary')) { %>
     @PrimaryGeneratedColumn()
     id: number;
 <% } -%>
-
 <% Object.keys(modelProps).forEach(function(prop) { %>
 <% if (modelProps[prop] == 'primary') { %>
     @PrimaryGeneratedColumn()

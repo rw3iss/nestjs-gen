@@ -127,7 +127,7 @@ prog
     if (modelDef) {
         o.modelProps = TypeHelper.parseModelProps(modelDef);
     } else {
-        o.modelProps = undefined;
+        o.modelProps = {};
     }
 
     ////////////////////
