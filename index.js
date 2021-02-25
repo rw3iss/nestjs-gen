@@ -14,8 +14,8 @@ prog
 
 .argument('<name>',                     'Name of the model or module')
 
-.option('-a',                           'Generate all (Module + Controller + Service + Repository + Model')
-.option('--all',                        'Generate all (Module + Controller + Service + Repository + Model')
+.option('-a',                           'Generate all (Module + Controller + Service + Repository + Model)')
+.option('--all',                        'Generate all (Module + Controller + Service + Repository + Model)')
 
 .option('-m',                           'Generate a Module')
 .option('--module',                     'Generate a Module')
@@ -56,11 +56,13 @@ prog
 
 .action((args, o, logger) => {
 
-    // first see if there is a configuration file available, and start with that
-    const config = _findConfig();
+    console.log(`Running nestjs-gen v${version} generator...`)
+
+    // first see if there's a configuration file available, and start with that
+    const { configFilePath, config } = _findConfig();
 
     if (config) {
-        console.log("Using tsconfig settings...");
+        console.log(`Using ${configFilePath} settings...`);
 
         if (config["prefix"] && !o.prefix) 
             o.prefix = config["prefix"];
@@ -233,29 +235,28 @@ function _ensureTrailingSlash(str) {
     return str.charAt(str.length-1) !== '/' ? (str + '/') : str;
 }
 
+// todo: look into parent directories if not found?
 function _findConfig() {
-    let ngenConfig;
+    let config;
+    let configFilePath;
 
-    function _read(configFile) {
-        let ngenConfig;
-        if (fs.existsSync(configFile)) {
-            let config = require(configFile);
-            if (config['ngen-config']) {
-                ngenConfig = config['ngen-config']
+    function _read(filePath) {
+        if (fs.existsSync(filePath)) {
+            let _config = require(filePath);
+            if (_config['ngen-config']) {
+                configFilePath = filePath;
+                return _config['ngen-config'];
             }
         }
-        return ngenConfig;
     }
 
     // look in tsconfig.app.json?
-    let configFile = path.resolve("./tsconfig.app.json");
-    ngenConfig = _read(configFile);
+    config = _read(path.resolve("./tsconfig.app.json"));
 
     // look in tsconfig.json?
-    if (!ngenConfig) {
-        configFile = path.resolve("./tsconfig.json");
-        ngenConfig = _read(configFile);
+    if (!config) {
+        config = _read(path.resolve("./tsconfig.json"));
     }
 
-    return ngenConfig;
+    return { configFilePath, config };
 }
