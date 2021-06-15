@@ -1,6 +1,6 @@
 {
     "name": "nestjs-gen",
-    "version": "1.3.4",
+    "version": "1.3.5",
     "description": "NestJS model package generator",
     "main": "index.js",
     "scripts": {
