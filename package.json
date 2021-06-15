@@ -1,40 +1,39 @@
 {
-  "name": "nestjs-gen",
-  "version": "1.3.1",
-  "description": "NestJS model package generator",
-  "main": "index.js",
-  "scripts": {
-      "install": "npm install"
-  },
-  "bin": {
-    "ngen": "./index.js",
-    "ngen-copy-templates": "./scripts/copyTemplates.js"
-  },
-  "keywords": [
-    "nestjs",
-    "scaffold",
-    "generator"
-  ],
-  "repository": {
-    "type": "git",
-    "url": "git@github.com:rw3iss/nestjs-gen.git"
-  },
-  "author": "Ryan Weiss <rw3iss@gmail.com>",
-  "license": "ISC",
-  "dependencies": {
-    "caporal": "^1.4.0",
-    "ejs": "github:tj/ejs",
-    "prompts": "^2.3.2"
-  },
-  "publishConfig": {
-    "registry": "https://registry.npmjs.org"
-  },
-  "bugs": {
-    "url": "https://github.com/rw3iss/nestjs-gen/issues"
-  },
-  "homepage": "https://github.com/rw3iss/nestjs-gen#readme",
-  "directories": {
-    "lib": "lib"
-  },
-  "devDependencies": {}
+    "name": "nestjs-gen",
+    "version": "1.3.1",
+    "description": "NestJS model package generator",
+    "main": "index.js",
+    "scripts": {
+        "install": "npm install"
+    },
+    "bin": {
+        "ngen": "./index.js",
+        "ngen-copy-templates": "./scripts/copyTemplates.js"
+    },
+    "keywords": [
+        "nestjs",
+        "scaffold",
+        "generator"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:rw3iss/nestjs-gen.git"
+    },
+    "author": "Ryan Weiss <rw3iss@gmail.com>",
+    "license": "ISC",
+    "dependencies": {
+        "caporal": "^1.4.0",
+        "ejs": "^3.1.6",
+        "prompts": "^2.3.2"
+    },
+    "publishConfig": {
+        "registry": "https://registry.npmjs.org"
+    },
+    "bugs": {
+        "url": "https://github.com/rw3iss/nestjs-gen/issues"
+    },
+    "homepage": "https://github.com/rw3iss/nestjs-gen#readme",
+    "directories": {
+        "lib": "lib"
+    }
 }
