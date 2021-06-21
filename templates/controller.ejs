@@ -1,16 +1,16 @@
 import { Controller, Request, Param, Body, Get, Post, Put, Delete, ParseUUIDPipe<% if (auth) { %>, UseGuards<% } %> } from "@nestjs/common";
-<% if (service) { %>import { <%= name %>Service } from './<%= serviceFileName %>';
+<% if (service) { %>import { <%= nameUpper %>Service } from './<%= serviceFileName %>';
 <% } else { -%>
-<% if (repository) { %>import { <%= name %>Repository } from './<%= repositoryFileName %>';
+<% if (repository) { %>import { <%= nameUpper %>Repository } from './<%= repositoryFileName %>';
 <% } else if (crud) { %>import { Repository } from 'typeorm'; <% } -%>
 <% } -%>
 <% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';<% } %>
 <% if (auth) { %>import { <%= authGuardClass %> } from '<%= authGuardDir %>';<% } %>
 
 @Controller('/<%= name %>')
-export class <%= name %>Controller {
+export class <%= nameUpper %>Controller {
 
-    public constructor(<% if (service) { %>private readonly <%= name %>Service: <%= name %>Service<% } -%>
+    public constructor(<% if (service) { %>private readonly <%= name %>Service: <%= nameUpper %>Service<% } -%>
 <% if (!service && (repository || crud)) { %>private readonly <%= name %>Repository: <%- repositoryName %><% } %>) {
     }
 

@@ -1,18 +1,18 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-<% if (controller) { %>import { <%= name %>Controller } from './<%= controllerFileName %>';<% } %>
-<% if (service) { %>import { <%= name %>Service } from './<%= serviceFileName %>';<% } %>
-<% if (repository) { %>import { <%= name %>Repository } from './<%= repositoryFileName %>';
+<% if (controller) { %>import { <%= nameUpper %>Controller } from './<%= controllerFileName %>';<% } %>
+<% if (service) { %>import { <%= nameUpper %>Service } from './<%= serviceFileName %>';<% } %>
+<% if (repository) { %>import { <%= nameUpper %>Repository } from './<%= repositoryFileName %>';
 <% } else if (false && crud) { %>import { Repository } from 'typeorm'; <% } -%>
 <% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';<% } %>
 
 @Module({
 <% if (model || repository || crud) { %>imports: [TypeOrmModule.forFeature([<%= modelClass %>])]<% if (controller || service || repository || crud) { %>,<% } %><% } %>
-    <% if (controller) { %>controllers: [<%= name %>Controller],<% } %>
+    <% if (controller) { %>controllers: [<%= nameUpper %>Controller],<% } %>
     <% if (service || repository || crud) { %>providers: [
-        <% if (service) { %><%= name %>Service<% if (repository) { %>,<% } %><% } %>
+        <% if (service) { %><%= nameUpper %>Service<% if (repository) { %>,<% } %><% } %>
     ],
 <% } -%>
     exports: []
 })
-export class <%= name %>Module {}
+export class <%= nameUpper %>Module {}
