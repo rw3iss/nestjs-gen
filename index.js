@@ -108,7 +108,7 @@ prog
         o.module = o.repository = o.model = o.controller = o.service = o.crud = true;
     }
 
-    o.name = args.name;
+    o.name = _capitalize(args.name);
 
     // set auth guarding params if applicable?
     if (o.auth) {
@@ -138,9 +138,9 @@ prog
     // make containing folder for the module, if using, or otherwise the package name
     let outPath =  path.resolve((o.prefix ? o.prefix : './'));
     if (o.module) {
-        outPath += `/modules/${o.name}`;
+        outPath += `/modules/${o.name.toLowerCase()}`;
     } else {
-        outPath += o.noSubdir ? '' : `/${o.name}`;
+        outPath += o.noSubdir ? '' : `/${o.name.toLowerCase()}`;
     }
 
     fs.mkdirSync(outPath, { recursive: true });
@@ -152,7 +152,7 @@ prog
     // MODEL ?
     if (o.model || o.repository || o.crud) {
         if (!o.modelClass) {
-            o.modelClass = _capitalize(o.name);
+            o.modelClass = o.name;
             if (o.modelClass.charAt(o.modelClass.length-1) === 's') {
                 o.modelClass = o.modelClass.substr(0, o.modelClass.length-1);
             }
@@ -184,7 +184,7 @@ prog
 
     // REPOSITORY ?
     if (o.repository) {
-        o.repositoryName = _capitalize(o.name) + 'Repository';
+        o.repositoryName = o.name + 'Repository';
         o.repositoryFileName = _getFileName(o.name, 'repository', o.casing);
         let outFile = `${outPath}/${o.repositoryFileName}.ts`;
         stagedFiles.push({ type: 'repository', outFile });

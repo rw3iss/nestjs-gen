@@ -1,11 +1,9 @@
 {
     "name": "nestjs-gen",
     "version": "1.3.5",
-    "description": "NestJS model package generator",
+    "description": "NestJS templated generator",
     "main": "index.js",
-    "scripts": {
-        "install": "npm install"
-    },
+    "scripts": {},
     "bin": {
         "ngen": "index.js",
         "ngen-copy-templates": "scripts/copyTemplates.js"
@@ -24,6 +22,7 @@
     "dependencies": {
         "caporal": "^1.4.0",
         "ejs": "^3.1.6",
+        "ejs-lint": "^1.2.0",
         "prompts": "^2.3.2"
     },
     "publishConfig": {

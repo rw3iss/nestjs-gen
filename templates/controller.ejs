@@ -1,16 +1,16 @@
 import { Controller, Request, Param, Body, Get, Post, Put, Delete, ParseUUIDPipe<% if (auth) { %>, UseGuards<% } %> } from "@nestjs/common";
-<% if (service) { %>import { <%=: name | capitalize %>Service } from './<%= serviceFileName %>';
+<% if (service) { %>import { <%= name %>Service } from './<%= serviceFileName %>';
 <% } else { -%>
-<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= repositoryFileName %>';
+<% if (repository) { %>import { <%= name %>Repository } from './<%= repositoryFileName %>';
 <% } else if (crud) { %>import { Repository } from 'typeorm'; <% } -%>
 <% } -%>
 <% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';<% } %>
 <% if (auth) { %>import { <%= authGuardClass %> } from '<%= authGuardDir %>';<% } %>
 
 @Controller('/<%= name %>')
-export class <%=: name | capitalize %>Controller {
+export class <%= name %>Controller {
 
-    public constructor(<% if (service) { %>private readonly <%= name %>Service: <%=: name | capitalize %>Service<% } -%>
+    public constructor(<% if (service) { %>private readonly <%= name %>Service: <%= name %>Service<% } -%>
 <% if (!service && (repository || crud)) { %>private readonly <%= name %>Repository: <%- repositoryName %><% } %>) {
     }
 
@@ -42,7 +42,7 @@ export class <%=: name | capitalize %>Controller {
 
         Object.assign(<%= modelClassLower %>, body);
         return this.<%= name %>Service.update(req, <%= modelClassLower %>);
-        <% } else if (repository || crud) { %>let <%= modelClassLower %>: <%=: name | capitalize %> = await this.<%= name %>Repository.findOne({ id });
+        <% } else if (repository || crud) { %>let <%= modelClassLower %>: <%= name %> = await this.<%= name %>Repository.findOne({ id });
         if (!<%= modelClassLower %>) {
             throw "Object <%= modelClassLower %> does not exist";
         } 

@@ -1,12 +1,12 @@
 import { Injectable, UnauthorizedException, Request } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-<% if (repository) { %>import { <%=: name | capitalize %>Repository } from './<%= repositoryFileName %>';<% } %>
+<% if (repository) { %>import { <%= name %>Repository } from './<%= repositoryFileName %>';<% } %>
 <% if (model || repository || crud) { %>import { <%= modelClass %> } from './<%= modelDir %><%= modelFileName %>';<% } %>
 
 @Injectable()
-export class <%=: name | capitalize %>Service {
+export class <%= name %>Service {
 
-    public constructor(<% if (repository || crud) { %>@InjectRepository(<%= repositoryName %>) private <%=: name  %>Repository: <%= repositoryName %><% } %>) {
+    public constructor(<% if (repository || crud) { %>@InjectRepository(<%= repositoryName %>) private <%= name  %>Repository: <%= repositoryName %><% } %>) {
     }
 
 <% if (crud) { -%>
