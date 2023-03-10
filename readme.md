@@ -9,6 +9,8 @@ A command line tool to automatically generate some or all feature set files for 
 
 The generated class files will automatically reference each other through imports and injections. 
 
+You can customize the templates to your liking with some utility commands (see "Customizing The Templates" section below).
+
 See the `./example_generated` folder to see an example of the generated code using all features + CRUD.
 
 (**Tip:** use `--casing pascal` to generate pascal-cased filenames, ie. "ExampleModule.ts")
